@@ -1,0 +1,8 @@
+version: '3.8'
+
+services:
+  servidor_web:
+    build: .
+    container_name: contenedor_compose
+    ports:
+      - "9090:80"
