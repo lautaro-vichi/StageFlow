@@ -6,3 +6,6 @@ services:
     container_name: contenedor_compose
     ports:
       - "9090:80"
+    volumes:
+      # Cambiamos el punto (.) por ./frontend para apuntar a tus archivos reales
+      - ./frontend:/usr/share/nginx/html
