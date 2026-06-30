@@ -79,4 +79,7 @@ INSERT INTO events (name, description, date, start_time, end_time, location, sta
 ('Festival de Jazz', 'Un festival de jazz con artistas internacionales.', '2024-08-10', '18:00:00', '22:00:00', 'Parque Central', 'confirmado'),
 ('Exposición de Arte', 'Una exposición de arte contemporáneo.', '2024-09-05', '10:00:00', '18:00:00', 'Galería de Arte Moderno', 'en curso'),
 ('Feria Gastronómica', 'Una feria gastronómica con chefs reconocidos.', '2024-10-20', '12:00:00', '20:00:00', 'Plaza Mayor', 'finalizado'),
-('Conferencia Tecnológica', 'Una conferencia sobre las últimas tendencias en tecnología.', '2024-11-15', '09:00:00', '17:00:00', 'Centro de Convenciones', 'cancelado');
+('Conferencia Tecnológica', 'Una conferencia sobre las últimas tendencias en tecnología.', '2024-11-15', '09:00:00', '17:00:00', 'Centro de Convenciones', 'cancelado'),();
+
+INSERT INTO artists (name, genre) VALUES 
+('powfu', 'lo-fi');

@@ -3,6 +3,9 @@ const cors = require("cors");
 const pool = require("./db");
 
 const eventsController = require("./controllers/eventsController.js");
+const artistsController = require("./controllers/artistsController.js");
+const resourceController = require("./controllers/resourceController.js");
+
 const app = express();
 const port = 3000;
 
@@ -26,14 +29,31 @@ async function conectarDB() {
 
 conectarDB();
 
-// controller para un solo evento
+// controllers para eventos
 app.get("/events", eventsController.getEvents);
 
-// controller para un solo evento
 app.get("/events/:id", eventsController.getEventById);
 
-// controller para crear un evento
-app.post("/events", eventsController.CreateEvent);
+app.post("/events", eventsController.createEvent);
+
+app.put("/events/:id", eventsController.updateEvent);
+
+app.delete("/events/:id", eventsController.deleteEvent);
+
+
+//controllers para artistas
+app.get("/artists", artistsController.getArtists);
+
+app.get("/artists/:id", artistsController.getArtistById);
+
+app.post("/artists", artistsController.createArtist);
+
+app.put("/artist/:id", artistsController.updateArtist);
+
+app.delete("/artist", artistsController.deleteArtist);
+
+//controller para recursos
+app.get("/resources", resourceController.getResources);
 
 
 app.listen(port, () => {
