@@ -48,9 +48,9 @@ app.get("/artists/:id", artistsController.getArtistById);
 
 app.post("/artists", artistsController.createArtist);
 
-app.put("/artist/:id", artistsController.updateArtist);
+app.put("/artists/:id", artistsController.updateArtist);
 
-app.delete("/artist", artistsController.deleteArtist);
+app.delete("/artists/:id", artistsController.deleteArtist);
 
 //controller para recursos
 app.get("/resources", resourceController.getResources);
