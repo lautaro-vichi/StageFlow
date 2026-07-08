@@ -1,125 +1,205 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>StageFlow - Gestión de Eventos Artísticos</title>
+    <title>Nosotros | StageFlow</title>
+    <meta name="description" content="Conoce al equipo detrás de StageFlow y nuestra misión para revolucionar la gestión de eventos artísticos en vivo.">
+    
+    <!-- Framework Bulma -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.0/css/bulma.min.css">
+    
+    <!-- Ajustes oscuros consistentes con el resto del sitio -->
+    <style>
+        body {
+            background-color: #1a1a1a;
+            color: #ffffff;
+        }
+        .team-card {
+            background-color: #262626;
+            border: 1px solid #363636;
+            border-radius: 8px;
+            overflow: hidden;
+            transition: transform 0.3s ease;
+        }
+        .team-card:hover {
+            transform: translateY(-5px);
+        }
+        .icon-box {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+    </style>
 </head>
 <body>
-    <nav class="navbar is-black" role="navigation" aria-label="main navigation">
-        <div class="container">
-            <div class="navbar-brand">
-                <a class="navbar-item has-text-weight-bold is-size-4" href="index.html">
-                    ⚡ StageFlow
-                </a>
-            </div>
-            
-            <div class="navbar-menu">
-                <div class="navbar-start">
-                    <a class="navbar-item" href="index.html">Inicio</a>
-                    <a class="navbar-item" href="eventos.html">Gestionar Eventos</a>
-                    <a class="navbar-item" href="nosotros.html">Nosotros</a>
-                </div>
 
-                <div class="navbar-end">
-                    <div class="navbar-item">
-                        <div class="buttons">
-                            <a class="button is-primary" href="#registro">
-                                <strong>Comenzar</strong>
-                            </a>
-                        </div>
+    <!-- MENÚ DE NAVEGACIÓN -->
+    <header>
+        <nav class="navbar is-black" role="navigation" aria-label="main navigation">
+            <div class="container">
+                <div class="navbar-brand">
+                    <a class="navbar-item has-text-weight-bold is-size-4" href="principal.html">
+                        ⚡ StageFlow
+                    </a>
+                    <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarMenuPrincipal">
+                        <span aria-hidden="true"></span>
+                        <span aria-hidden="true"></span>
+                        <span aria-hidden="true"></span>
+                        <span aria-hidden="true"></span>
+                    </a>
+                </div>
+                
+                <div id="navbarMenuPrincipal" class="navbar-menu">
+                    <div class="navbar-start">
+                        <a class="navbar-item" href="principal.html">Inicio</a>
+                        <a class="navbar-item" href="eventos.html">Gestionar Eventos</a>
+                        <!-- Clase is-active aplicada a Nosotros -->
+                        <a class="navbar-item is-active" href="nosotros.html" aria-current="page">Nosotros</a>
                     </div>
                 </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- TÍTULO DE LA PÁGINA (HERO) -->
+    <section class="hero is-dark is-medium" style="background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('https://images.unsplash.com/photo-1459749411175-04bf5292ceea?auto=format&fit=crop&w=1200&q=80') center/cover;">
+        <div class="hero-body">
+            <div class="container has-text-centered">
+                <h1 class="title is-1 has-text-white">Nuestra Historia</h1>
+                <h2 class="subtitle is-4 has-text-grey-light mt-3">Transformando el caos del backstage en sincronía perfecta.</h2>
             </div>
         </div>
-    </nav>
-
-    <section class="section">
-        <div class="container">
-            <div class="has-text-centered mb-6">
-                <h1 class="title is-1">El Equipo Detrás de StageFlow</h1>
-                <p class="subtitle is-5 has-text-grey">Conocé a los desarrolladores encargados de optimizar tus flujos de trabajo en el escenario</p>
-            </div>
-
-            <div class="columns is-centered">
-                
-                <div class="column is-one-third">
-                    <div class="card">
-                        <div class="card-content has-text-centered">
-                            <div class="is-size-1 mb-2">🎨</div>
-                            <p class="title is-4">Integrante 1</p>
-                            <p class="subtitle is-6 has-text-primary">Diseñador Frontend / UI</p>
-                            <div class="content">
-                                Responsable de la estructura visual de la aplicación, maquetado adaptativo y experiencia de usuario.
-                            </div>
-                            <button class="button is-link is-small btn-perfil" data-rol="Frontend" data-tech="HTML5, CSS3, Bulma CSS, Flexbox, Maquetado Semántico">
-                                Ver Detalles Técnicos
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="column is-one-third">
-                    <div class="card">
-                        <div class="card-content has-text-centered">
-                            <div class="is-size-1 mb-2">⚙️</div>
-                            <p class="title is-4">Integrante 2</p>
-                            <p class="subtitle is-6 has-text-primary">Desarrollador Backend & DB</p>
-                            <div class="content">
-                                Encargado de modelar la base de datos relacional, las rutas de la API REST y las reglas lógicas del negocio.
-                            </div>
-                            <button class="button is-link is-small btn-perfil" data-rol="Backend" data-tech="Node.js, Express, SQL Puro, PostgreSQL / MySQL, Integridad Referencial">
-                                Ver Detalles Técnicos
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="column is-one-third">
-                    <div class="card">
-                        <div class="card-content has-text-centered">
-                            <div class="is-size-1 mb-2">🐳</div>
-                            <p class="title is-4">Integrante 3</p>
-                            <p class="subtitle is-6 has-text-primary">Fullstack & DevOps</p>
-                            <div class="content">
-                                Encargado de conectar las pantallas con el servidor, empaquetar el sistema en contenedores y automatizar comandos.
-                            </div>
-                            <button class="button is-link is-small btn-perfil" data-rol="Integración" data-tech="JavaScript Asincrónico, Fetch API, Docker, Docker Compose, Makefile, Git Branches">
-                                Ver Detalles Técnicos
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-            </div> </div>
     </section>
 
-    <div class="modal" id="modal-experiencia">
-        <div class="modal-background" id="modal-bg-close"></div>
-        <div class="modal-card">
-            <header class="modal-card-head">
-                <p class="modal-card-title" id="modal-titulo">Tecnologías Aplicadas</p>
-                <button class="delete" aria-label="close" id="modal-btn-close"></button>
-            </header>
-            <section class="modal-card-body">
-                <div class="content">
-                    <h4 class="title is-5">Especialidad: <span id="modal-rol" class="has-text-link"></span></h4>
-                    <p>Para este proyecto final de cátedra, el estudiante defendió y aplicó de forma práctica las siguientes herramientas del cronograma:</p>
-                    <div class="box has-background-light">
-                        <code id="modal-lista-tech" class="has-text-weight-bold"></code>
+    <main>
+        <!-- SECCIÓN: NUESTRA MISIÓN -->
+        <section class="section has-background-dark">
+            <div class="container">
+                <div class="columns is-vcentered">
+                    <div class="column is-half">
+                        <h2 class="title is-3 has-text-white">Nacidos en el Escenario</h2>
+                        <p class="is-size-5 has-text-grey-light mb-4">
+                            StageFlow no fue creado en una oficina tradicional, sino detrás de los telones. Entendemos la presión de coordinar a decenas de artistas, técnicos y equipos bajo la mirada de miles de espectadores.
+                        </p>
+                        <p class="is-size-5 has-text-grey-light">
+                            Nuestra misión es simple: brindar a los directores de escena y productores una herramienta unificada que elimine las superposiciones, valide los recursos en tiempo real y garantice que el espectáculo siempre continúe sin interrupciones.
+                        </p>
+                    </div>
+                    <div class="column is-half">
+                        <figure class="image is-4by3">
+                            <img src="https://images.unsplash.com/photo-1598387181032-a3103a2db5b3?auto=format&fit=crop&w=800&q=80" alt="Consola de iluminación en vivo" style="border-radius: 8px; object-fit: cover;">
+                        </figure>
                     </div>
                 </div>
-            </section>
-            <footer class="modal-card-foot">
-                <button class="button is-primary" id="modal-foot-close">Entendido</button>
-            </footer>
+            </div>
+        </section>
+
+        <!-- SECCIÓN: NUESTROS VALORES -->
+        <section class="section" style="background-color: #1a1a1a;">
+            <div class="container">
+                <h2 class="title is-3 has-text-centered has-text-white mb-6">Nuestros Pilares</h2>
+                <div class="columns is-multiline has-text-centered">
+                    
+                    <div class="column is-one-third">
+                        <div class="icon-box">🎯</div>
+                        <h3 class="title is-5 has-text-white">Precisión Absoluta</h3>
+                        <p class="has-text-grey-light">Cada minuto cuenta. Nuestro sistema asegura márgenes de error cero en la asignación de horarios.</p>
+                    </div>
+                    
+                    <div class="column is-one-third">
+                        <div class="icon-box">💡</div>
+                        <h3 class="title is-5 has-text-white">Innovación Constante</h3>
+                        <p class="has-text-grey-light">Evolucionamos al ritmo de la tecnología para espectáculos, integrando las mejores prácticas de la industria.</p>
+                    </div>
+                    
+                    <div class="column is-one-third">
+                        <div class="icon-box">🤝</div>
+                        <h3 class="title is-5 has-text-white">Soporte Dedicado</h3>
+                        <p class="has-text-grey-light">Sabemos que el show es en vivo. Estamos comprometidos con la estabilidad de tu producción.</p>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- SECCIÓN: EL EQUIPO -->
+        <section class="section has-background-dark">
+            <div class="container">
+                <h2 class="title is-3 has-text-centered has-text-white mb-6">El Equipo Fundador</h2>
+                <div class="columns is-centered">
+                    
+                    <!-- Tarjeta de Miembro 1 (Puedes duplicar este bloque si son más personas) -->
+                    <div class="column is-4-tablet is-3-desktop">
+                        <div class="team-card has-text-centered p-5">
+                            <figure class="image is-128x128 is-inline-block mb-4">
+                                <!-- Reemplaza este enlace por tu foto real -->
+                                <img class="is-rounded" src="" alt="Foto del fundador" style="object-fit: cover;">
+                            </figure>
+                            <h3 class="title is-5 has-text-white mb-1">Nombre aquí</h3>
+                            <p class="subtitle is-6 has-text-primary">Fundador & Desarrollador Principal</p>
+                            <p class="is-size-7 has-text-grey-light mt-3">
+                                Apasionado por la tecnología y la producción de eventos, creador de la arquitectura de StageFlow.
+                            </p>
+                        </div>
+                    </div>
+
+
+                    <div class="column is-4-tablet is-3-desktop">
+                        <div class="team-card has-text-centered p-5">
+                            <figure class="image is-128x128 is-inline-block mb-4">
+                                <img class="is-rounded" src="" alt="Foto del socio" style="object-fit: cover;">
+                            </figure>
+                            <h3 class="title is-5 has-text-white mb-1">Nombre Socio</h3>
+                            <p class="subtitle is-6 has-text-primary">Co-Fundador & Diseño Técnico</p>
+                            <p class="is-size-7 has-text-grey-light mt-3">
+                                Especialista en flujos de trabajo e interfaces de usuario para producciones masivas.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="column is-4-tablet is-3-desktop">
+                        <div class="team-card has-text-centered p-5">
+                            <figure class="image is-128x128 is-inline-block mb-4">
+                                <img class="is-rounded" src="" alt="Foto del socio" style="object-fit: cover;">
+                            </figure>
+                            <h3 class="title is-5 has-text-white mb-1">Nombre Socio</h3>
+                            <p class="subtitle is-6 has-text-primary">Co-Fundador & Diseño Técnico</p>
+                            <p class="is-size-7 has-text-grey-light mt-3">
+                                Especialista en flujos de trabajo e interfaces de usuario para producciones masivas.
+                            </p>
+                        </div>
+                    </div>
+                    
+
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- PIE DE PÁGINA -->
+    <footer class="footer has-background-black">
+        <div class="content has-text-centered has-text-grey-light">
+            <p>
+                <strong class="has-text-white">StageFlow</strong> &copy; 2026 - Herramienta de Gestión para Producciones Artísticas.
+            </p>
         </div>
-    </div>
+    </footer>
 
-    <script src="js/index.js"></script>
-</body>
-</html>
-
+    <!-- SCRIPT DE NAVEGACIÓN GLOBAL (Menú móvil) -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const $navbarBurgers = Array.prototype.slice.call(document.querySelectorAll('.navbar-burger'), 0);
+            if ($navbarBurgers.length > 0) {
+                $navbarBurgers.forEach( el => {
+                    el.addEventListener('click', () => {
+                        const target = el.dataset.target;
+                        const $target = document.getElementById(target);
+                        el.classList.toggle('is-active');
+                        $target.classList.toggle('is-active');
+                    });
+                });
+            }
+        });
+    </script>
 </body>
 </html>

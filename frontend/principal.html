@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StageFlow | Gestión y Control de Eventos Artísticos en Vivo</title>
+    <meta name="description" content="La herramienta definitiva para la gestión, control y sincronización de eventos en vivo. Optimiza la producción de tu escenario y equipamiento sin superposiciones.">
+    
+    <!-- Framework Bulma -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.0/css/bulma.min.css">
+
+    <!-- Estilos específicos para el carrusel y optimizaciones visuales en la Home -->
+    <style>
+        .carousel-container {
+            display: flex;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            scroll-behavior: smooth;
+            gap: 20px;
+            padding: 20px 0;
+        }
+        .carousel-item {
+            flex: 0 0 100%;
+            scroll-snap-align: start;
+            position: relative;
+        }
+        @media (min-width: 769px) {
+            .carousel-item {
+                flex: 0 0 calc(33.333% - 14px);
+            }
+        }
+        .carousel-container::-webkit-scrollbar {
+            height: 8px;
+        }
+        .carousel-container::-webkit-scrollbar-thumb {
+            background: #4a4a4a;
+            border-radius: 4px;
+        }
+        .avatar-img {
+            border-radius: 50%;
+            object-fit: cover;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- MENÚ DE NAVEGACIÓN -->
+    <header>
+        <nav class="navbar is-black" role="navigation" aria-label="main navigation">
+            <div class="container">
+                <div class="navbar-brand">
+                    <a class="navbar-item has-text-weight-bold is-size-4" href="principal.html">
+                        ⚡ StageFlow
+                    </a>
+                    <!-- Botón hamburguesa para móviles -->
+                    <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarMenuPrincipal">
+                        <span aria-hidden="true"></span>
+                        <span aria-hidden="true"></span>
+                        <span aria-hidden="true"></span>
+                        <span aria-hidden="true"></span>
+                    </a>
+                </div>
+                
+                <div id="navbarMenuPrincipal" class="navbar-menu">
+                    <div class="navbar-start">
+                        <a class="navbar-item is-active" href="principal.html" aria-current="page">Inicio</a>
+                        <a class="navbar-item" href="eventos.html">Gestionar Eventos</a>
+                        <a class="navbar-item" href="nosotros.html">Nosotros</a>
+                    </div>
+                    <div class="navbar-end">
+                        <div class="navbar-item">
+                            <div class="buttons">
+                                <a class="button is-primary" href="eventos.html">
+                                    <strong>Comenzar</strong>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <!-- SECCIÓN HERO -->
+        <section id="inicio" class="hero is-medium is-link is-bold">
+            <div class="hero-body">
+                <div class="container has-text-centered">
+                    <h1 class="title is-1">
+                        Optimiza tus flujos de trabajo en el escenario
+                    </h1>
+                    <p class="subtitle is-4 mt-3">
+                        La herramienta definitiva para la gestión, control y sincronización de eventos en vivo. Lleva la producción de tu escenario al siguiente nivel.
+                    </p>
+                    <div class="buttons is-centered mt-5">
+                        <a href="eventos.html" class="button is-primary is-large">Probar Sistema</a>
+                        <a href="#organizacion" class="button is-light is-large is-outlined">Saber Más</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CARACTERÍSTICAS -->
+        <section id="caracteristicas" class="section">
+            <div class="container">
+                <h2 class="title has-text-centered mb-6">¿Qué puedes controlar con StageFlow?</h2>
+                <div class="columns is-multiline">
+                    <div class="column is-one-third">
+                        <article class="box has-text-centered">
+                            <div class="is-size-1 mb-3"><span role="img" aria-label="Reloj de arena">⏳</span></div>
+                            <h3 class="title is-5">Superposición Cero</h3>
+                            <p>El sistema valida de forma inteligente que ningún artista sea asignado a dos shows simultáneos.</p>
+                        </article>
+                    </div>
+                    <div class="column is-one-third">
+                        <article class="box has-text-centered">
+                            <div class="is-size-1 mb-3"><span role="img" aria-label="Consola de sonido">🎛️</span></div>
+                            <h3 class="title is-5">Gestión de Equipamiento</h3>
+                            <p>Controla la disponibilidad de pantallas, sonido e iluminación antes de cada asignación.</p>
+                        </article>
+                    </div>
+                    <div class="column is-one-third">
+                        <article class="box has-text-centered">
+                            <div class="is-size-1 mb-3"><span role="img" aria-label="Gráfico de barras">📊</span></div>
+                            <h3 class="title is-5">Estados en Tiempo Real</h3>
+                            <p>Monitorea si un show está Planificado, Confirmado, En Curso o Finalizado.</p>
+                        </article>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECCIÓN: INFORMACIÓN DE ORGANIZACIÓN CON FOTO -->
+        <section id="organizacion" class="section has-background-dark has-text-white">
+            <div class="container">
+                <div class="columns is-vcentered">
+                    <div class="column is-half">
+                        <h2 class="title is-2 has-text-white">Organización Inteligente de Backstage</h2>
+                        <p class="body-text is-size-5 mb-4 has-text-grey-light">
+                            Detrás de cada gran show hay una logística impecable. StageFlow centraliza el orden de los artistas, los requerimientos técnicos y los tiempos de ensayo en un solo panel de control unificado.
+                        </p>
+                        <div class="content">
+                            <ul class="has-text-grey-light">
+                                <li><strong class="has-text-white">Cronogramas Automatizados:</strong> Genera la escaleta técnica del evento minuto a minuto.</li>
+                                <li><strong class="has-text-white">Asignación de Personal:</strong> Vincula técnicos de audio, video e iluminación a cada bloque artístico.</li>
+                                <li><strong class="has-text-white">Alertas de Conflictos:</strong> El sistema avisa si hay problemas técnicos antes de que ocurran en vivo.</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="column is-half">
+                        <figure class="image is-4by3">
+                            <img src="https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?auto=format&fit=crop&w=800&q=80" alt="Organización técnica en backstage de un concierto masivo" style="border-radius: 8px; object-fit: cover;">
+                        </figure>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECCIÓN: CARRUSEL DE FOTOS (GALERÍA DE ESCENARIOS) -->
+        <section id="galeria" class="section">
+            <div class="container">
+                <h2 class="title has-text-centered mb-2">Grandes Escenarios, Control Total</h2>
+                <p class="subtitle has-text-centered mb-5">Explora las producciones gestionadas con nuestra plataforma</p>
+                
+                <div class="carousel-container">
+                    <div class="carousel-item">
+                        <div class="card">
+                            <div class="card-image">
+                                <figure class="image is-4by3">
+                                    <img src="https://images.unsplash.com/photo-1470225620780-dba8ba36b745?auto=format&fit=crop&w=500&q=80" alt="Festival de música">
+                                </figure>
+                            </div>
+                            <div class="card-content">
+                                <p class="title is-5">Festivales de Gran Escala</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="carousel-item">
+                        <div class="card">
+                            <div class="card-image">
+                                <figure class="image is-4by3">
+                                    <img src="https://images.unsplash.com/photo-1506157786151-b8491531f063?auto=format&fit=crop&w=500&q=80" alt="Concierto de rock">
+                                </figure>
+                            </div>
+                            <div class="card-content">
+                                <p class="title is-5">Giras y Conciertos de Rock</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="carousel-item">
+                        <div class="card">
+                            <div class="card-image">
+                                <figure class="image is-4by3">
+                                    <img src="https://images.unsplash.com/photo-1460661419201-fd4cecdf8a8b?auto=format&fit=crop&w=500&q=80" alt="Obra de teatro">
+                                </figure>
+                            </div>
+                            <div class="card-content">
+                                <p class="title is-5">Obras de Teatro y Musicales</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="carousel-item">
+                        <div class="card">
+                            <div class="card-image">
+                                <figure class="image is-4by3">
+                                    <img src="https://images.unsplash.com/photo-1540039155733-5bb30b53aa14?auto=format&fit=crop&w=500&q=80" alt="Evento corporativo">
+                                </figure>
+                            </div>
+                            <div class="card-content">
+                                <p class="title is-5">Galas y Eventos Corporativos</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECCIÓN: CLIENTES SATISFECHOS (TESTIMONIOS) -->
+        <section id="testimonios" class="section has-background-dark-ter">
+            <div class="container">
+                <h2 class="title has-text-centered mb-6">Clientes Satisfechos</h2>
+                
+                <div class="columns">
+                    <div class="column is-one-third">
+                        <div class="box">
+                            <p class="mb-4">"StageFlow cambió por completo cómo coordinamos los cambios de banda en los festivales. Cero retrasos y cero superposiciones de artistas."</p>
+                            <div class="media is-vcentered">
+                                <div class="media-left">
+                                    <figure class="image is-48x48">
+                                        <img src="https://i.pravatar.cc/150?img=33" alt="Carlos Mendoza" class="avatar-img">
+                                    </figure>
+                                </div>
+                                <div class="media-content">
+                                    <p class="title is-6 mb-0">Carlos Mendoza</p>
+                                    <p class="subtitle is-7">Director de Escena - RockFest</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="column is-one-third">
+                        <div class="box">
+                            <p class="mb-4">"La validación del equipamiento en tiempo real nos salvó de cometer errores críticos en tres eventos corporativos este mes. Imperdible."</p>
+                            <div class="media is-vcentered">
+                                <div class="media-left">
+                                    <figure class="image is-48x48">
+                                        <img src="https://i.pravatar.cc/150?img=47" alt="Elena Rostova" class="avatar-img">
+                                    </figure>
+                                </div>
+                                <div class="media-content">
+                                    <p class="title is-6 mb-0">Elena Rostova</p>
+                                    <p class="subtitle is-7">Productora Técnica - Nexus Events</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="column is-one-third">
+                        <div class="box">
+                            <p class="mb-4">"Gestionar los estados (Planificado, En Curso, Finalizado) desde una misma interfaz nos permite tener a todo el staff de iluminación sincronizado."</p>
+                            <div class="media is-vcentered">
+                                <div class="media-left">
+                                    <figure class="image is-48x48">
+                                        <img src="https://i.pravatar.cc/150?img=68" alt="Marcos Juárez" class="avatar-img">
+                                    </figure>
+                                </div>
+                                <div class="media-content">
+                                    <p class="title is-6 mb-0">Marcos Juárez</p>
+                                    <p class="subtitle is-7">Coordinador de Stage - Teatro Opera</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- PIE DE PÁGINA (Alto contraste corregido) -->
+    <footer class="footer has-background-black">
+        <div class="content has-text-centered has-text-grey-light">
+            <p>
+                <strong class="has-text-white">StageFlow</strong> &copy; 2026 - Herramienta de Gestión para Producciones Artísticas.
+            </p>
+        </div>
+    </footer>
+
+    <!-- SCRIPT DE NAVEGACIÓN GLOBAL (Menú móvil) -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const $navbarBurgers = Array.prototype.slice.call(document.querySelectorAll('.navbar-burger'), 0);
+            if ($navbarBurgers.length > 0) {
+                $navbarBurgers.forEach( el => {
+                    el.addEventListener('click', () => {
+                        const target = el.dataset.target;
+                        const $target = document.getElementById(target);
+                        el.classList.toggle('is-active');
+                        $target.classList.toggle('is-active');
+                    });
+                });
+            }
+        });
+    </script>
+
+    <!-- ARCHIVO JS PROPIO DE LA HOME (Listo para futuros usos e independiente de la gestión de eventos) -->
+    <script src="js/principal.js"></script>
+</body>
+</html>
