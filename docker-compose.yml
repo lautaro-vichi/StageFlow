@@ -1,11 +1,23 @@
-version: '3.8'
+version: "3.8"
 
 services:
-  servidor_web:
-    build: .
-    container_name: contenedor_compose
+
+  mysql:
+    image: mysql:8.0
+    container_name: stageflow-mysql
+
+    restart: always
+
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: stage_flow
+
     ports:
-      - "9090:80"
+      - "3306:3306"
+
     volumes:
-      # Cambiamos el punto (.) por ./frontend para apuntar a tus archivos reales
-      - ./frontend:/usr/share/nginx/html
+      - mysql_data:/var/lib/mysql
+      - ./database:/docker-entrypoint-initdb.d
+
+volumes:
+  mysql_data:

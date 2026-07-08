@@ -37,4 +37,14 @@ document.addEventListener('DOMContentLoaded', () => {
     cerrarBg.addEventListener('click', cerrarModal);
     cerrarBtn.addEventListener('click', cerrarModal);
     cerrarFoot.addEventListener('click', cerrarModal);
+
+   fetch("http://localhost:3000/events")
+    .then(response => response.json())
+    .then(eventos => {
+
+        console.log(eventos);
+
+    });
+    
+
 });
