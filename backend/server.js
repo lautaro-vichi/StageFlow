@@ -6,6 +6,10 @@ const eventsController = require("./controllers/eventsController.js");
 const artistsController = require("./controllers/artistsController.js");
 const resourceController = require("./controllers/resourceController.js");
 
+const eventsRoutes = require("./routes/eventsRoutes.js");
+const artistsRoutes = require("./routes/artistsRoutes.js");
+const resourcesRoutes = require("./routes/resourcesRoutes.js");
+
 const app = express();
 const port = 3000;
 
@@ -29,31 +33,11 @@ async function conectarDB() {
 
 conectarDB();
 
-// controllers para eventos
-app.get("/events", eventsController.getEvents);
+app.use("/events", eventsRoutes);
 
-app.get("/events/:id", eventsController.getEventById);
+app.use("/artists", artistsRoutes);
 
-app.post("/events", eventsController.createEvent);
-
-app.put("/events/:id", eventsController.updateEvent);
-
-app.delete("/events/:id", eventsController.deleteEvent);
-
-
-//controllers para artistas
-app.get("/artists", artistsController.getArtists);
-
-app.get("/artists/:id", artistsController.getArtistById);
-
-app.post("/artists", artistsController.createArtist);
-
-app.put("/artists/:id", artistsController.updateArtist);
-
-app.delete("/artists/:id", artistsController.deleteArtist);
-
-//controller para recursos
-app.get("/resources", resourceController.getResources);
+app.use("/resources", resourcesRoutes);
 
 
 app.listen(port, () => {

@@ -60,17 +60,17 @@ CREATE TABLE event_artist (
 
 );
 
-CREATE TABLE event_resource (
+CREATE TABLE resources (
 
     id INT AUTO_INCREMENT PRIMARY KEY,
 
-    event_id INT NOT NULL,
+    name VARCHAR(100) NOT NULL,
 
-    resource_id INT NOT NULL,
+    type VARCHAR(50),
 
-    FOREIGN KEY (event_id) REFERENCES events(id) ON DELETE CASCADE,
+    total_quantity INT NOT NULL,
 
-    FOREIGN KEY (resource_id) REFERENCES resources(id) ON DELETE CASCADE
+    available_quantity INT NOT NULL
 
 );
 
@@ -81,5 +81,9 @@ INSERT INTO events (name, description, date, start_time, end_time, location, sta
 ('Feria Gastronómica', 'Una feria gastronómica con chefs reconocidos.', '2024-10-20', '12:00:00', '20:00:00', 'Plaza Mayor', 'finalizado'),
 ('Conferencia Tecnológica', 'Una conferencia sobre las últimas tendencias en tecnología.', '2024-11-15', '09:00:00', '17:00:00', 'Centro de Convenciones', 'cancelado');
 
-INSERT INTO artists (name, genre) VALUES 
-('powfu', 'lo-fi');
+INSERT INTO resources (name, type, total_quantity, available_quantity) VALUES
+('Micrófono', 'Audio', 10, 10),
+('Proyector', 'Visual', 5, 5),
+('Silla', 'Mobiliario', 100, 100),
+('Mesa', 'Mobiliario', 20, 20),
+('Cámara de Video', 'Video', 3, 3);
