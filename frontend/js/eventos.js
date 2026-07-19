@@ -1,73 +1,161 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const form = document.getElementById('form-evento');
+    // -------------------------------------------------------------
+    // 1. CONFIGURACIÓN Y SELECTORES
+    // -------------------------------------------------------------
+    const formEvento = document.getElementById('form-evento');
     const contenedorEventos = document.getElementById('contenedor-eventos');
+    
+    const formArtista = document.getElementById('form-artista');
+    const listaArtistas = document.getElementById('lista-artistas');
 
-    // URL de tu Backend dockerizado (cambiar puerto si es necesario)
-    const API_URL = 'http://localhost:3000/events';
+    // URLs del Backend en Docker
+    const API_EVENTS = 'http://localhost:3000/events';
+    const API_ARTISTS = 'http://localhost:3000/artists'; // Apunta a tu artistsController
 
-    // 1. ESCUCHAR EL ENVÍO DEL FORMULARIO
-    if (form) {
-        form.addEventListener('submit', async (e) => {
-            e.preventDefault(); // Evita que la página se recargue
+    // -------------------------------------------------------------
+    // 2. LÓGICA DE ARTISTAS (ABM)
+    // -------------------------------------------------------------
 
-            // Capturamos los datos básicos
-            const nombre = document.getElementById('nombre').value;
-            const lugar = document.getElementById('lugar').value;
-            const fecha_inicio = document.getElementById('fecha-inicio').value;
-            const fecha_fin = document.getElementById('fecha-fin').value;
-            const estado = "planificado";
-            
-            // CAPTURAR PLANILLA DE EQUIPO (Checkboxes)
-            // Filtramos todos los checkboxes llamados "equipo" que estén marcados
-            const checkboxes = document.querySelectorAll('input[name="equipo"]:checked');
-            const equipoSeleccionado = Array.from(checkboxes).map(cb => cb.value);
-            
-            // Convertimos el array de equipos en un texto separado por comas para enviarlo
-            const equipoTexto = equipoSeleccionado.join(', ');
+    // Escuchar el envío del formulario de artistas (POST)
+    if (formArtista) {
+        formArtista.addEventListener('submit', async (e) => {
+            e.preventDefault();
 
-            // Armamos el objeto con los datos exactos que espera el backend
-            const nuevoEvento = {
-            name: nombre,              // Va a la columna 'name'
-            location: lugar,           // Va a la columna 'location'
-            fecha_inicio: fecha_inicio,
-            fecha_fin: fecha_fin,
-            equipo: equipoTexto,
-            status: estado             // Va a la columna 'status'
-};
+            const name = document.getElementById('nombre-artista').value;
+            const genre = document.getElementById('genero-artista').value;
 
             try {
-                // Enviamos los datos al backend en Docker
-                const respuesta = await fetch(API_URL, {
+                const respuesta = await fetch(API_ARTISTS, {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, genre })
+                });
+
+                if (respuesta.ok) {
+                    alert('¡Artista añadido con éxito!');
+                    formArtista.reset();
+                    cargarArtistas(); // Refresca la lista lateral
+                } else {
+                    const data = await respuesta.json();
+                    alert(data.mensaje || 'Hubo un error al guardar el artista.');
+                }
+            } catch (error) {
+                console.error('Error al conectar con la API de artistas:', error);
+                alert('No se pudo conectar con el servidor.');
+            }
+        });
+    }
+
+    // Cargar y mostrar la lista lateral de artistas (GET)
+    async function cargarArtistas() {
+        if (!listaArtistas) return;
+
+        try {
+            const respuesta = await fetch(API_ARTISTS);
+            const artistas = await respuesta.json();
+
+            listaArtistas.innerHTML = '';
+
+            if (artistas.length === 0) {
+                listaArtistas.innerHTML = `<p class="has-text-grey is-italic py-2">No hay artistas registrados.</p>`;
+                return;
+            }
+
+        artistas.forEach(artista => {
+            const itemHtml = `
+                <div class="notification is-dark py-2 px-3 mb-2 is-flex is-justify-content-between is-align-items-center" style="background-color: #2c2c2c;">
+                    <div>
+                        <strong class="has-text-white">🎤 ${artista.name}</strong> <br>
+                        <span class="tag is-small is-rounded is-info is-light">${artista.genre}</span>
+                    </div>
+                    <button onclick="eliminarArtista(${artista.id})" class="delete is-small has-background-danger"></button>
+                </div>
+            `;
+            listaArtistas.innerHTML += itemHtml;
+        });
+        } catch (error) {
+            console.error('Error al cargar artistas:', error);
+            listaArtistas.innerHTML = `<p class="has-text-danger">Error al cargar la lista.</p>`;
+        }
+    }
+
+    // Eliminar un artista (DELETE)
+    window.eliminarArtista = async (id) => {
+        if (!confirm('¿Estás seguro de eliminar a este artista del sistema?')) return;
+
+        try {
+            const respuesta = await fetch(`${API_ARTISTS}/${id}`, {
+                method: 'DELETE'
+            });
+
+            if (respuesta.ok) {
+                cargarArtistas();
+            } else {
+                alert('No se pudo eliminar al artista.');
+            }
+        } catch (error) {
+            console.error('Error al borrar artista:', error);
+        }
+    };
+
+
+    // -------------------------------------------------------------
+    // 3. LÓGICA DE EVENTOS (Adaptada a DATETIME)
+    // -------------------------------------------------------------
+
+    // Escuchar el envío del formulario de eventos (POST)
+    if (formEvento) {
+        formEvento.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const name = document.getElementById('nombre').value;
+            const location = document.getElementById('lugar').value;
+            // Adaptación Lautaro: tomamos los valores directo del input datetime-local
+            const start_time = document.getElementById('start-time').value;
+            const end_time = document.getElementById('end-time').value;
+            const status = "planificado";
+            
+            const checkboxes = document.querySelectorAll('input[name="equipo"]:checked');
+            const equipoTexto = Array.from(checkboxes).map(cb => cb.value).join(', ');
+
+            // Armamos el objeto con la estructura limpia de DATETIME
+            const nuevoEvento = {
+                name,
+                location,
+                start_time,
+                end_time,
+                equipo: equipoTexto,
+                status
+            };
+
+            try {
+                const respuesta = await fetch(API_EVENTS, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(nuevoEvento)
                 });
 
                 if (respuesta.ok) {
                     alert('¡Reserva de evento agendada con éxito!');
-                    form.reset(); // Limpia el formulario
-                    cargarEventos(); // Recarga la lista de tarjetas
+                    formEvento.reset();
+                    cargarEventos();
                 } else {
-                    alert('Hubo un error al guardar la reserva en el servidor.');
+                    alert('Hubo un error al guardar la reserva.');
                 }
             } catch (error) {
-                console.error('Error de conexión con el backend:', error);
-                alert('No se pudo conectar con el backend. ¿Está corriendo Docker?');
+                console.error('Error al conectar con la API de eventos:', error);
             }
         });
     }
 
-    // 2. FUNCIÓN PARA CARGAR Y MOSTRAR LAS TARJETAS (GET)
+    // Cargar y mostrar la grilla de eventos (GET)
     async function cargarEventos() {
         if (!contenedorEventos) return;
 
         try {
-            const respuesta = await fetch(API_URL);
+            const respuesta = await fetch(API_EVENTS);
             const eventos = await respuesta.json();
 
-            // Limpiamos las tarjetas viejas
             contenedorEventos.innerHTML = '';
 
             if (eventos.length === 0) {
@@ -75,24 +163,23 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
-// Dentro del forEach, adaptá las variables para que lean el inglés:
             eventos.forEach(evento => {
-                // Formateamos las fechas leyendo las columnas correspondientes
-                const inicioFormateado = new Date(evento.fecha_inicio).toLocaleString('es-AR');
-                const finFormateado = new Date(evento.fecha_fin).toLocaleString('es-AR');
+                // Leemos las propiedades con la nomenclatura de la base de datos
+                const inicioFormateado = new Date(evento.start_time).toLocaleString('es-AR');
+                const finFormateado = new Date(evento.end_time).toLocaleString('es-AR');
 
                 const tarjetaHtml = `
-                    <div class="column is-one-third is-half-tablet"> <!-- Corregido 'is-thirda' por 'is-one-third' -->
+                    <div class="column is-one-third is-half-tablet">
                         <div class="card">
                             <header class="card-header has-background-dark">
                                 <p class="card-header-title has-text-white">
-                                    ⚡ ${evento.name} <!-- 💻 Cambiado a evento.name -->
+                                    ⚡ ${evento.name}
                                 </p>
-                                <span class="tag is-info m-2">${evento.status}</span> <!-- 💻 Cambiado a evento.status -->
+                                <span class="tag is-info m-2">${evento.status}</span>
                             </header>
                             <div class="card-content">
                                 <div class="content">
-                                    <p>📍 <strong>Lugar:</strong> ${evento.location}</p> <!-- 💻 Cambiado a evento.location -->
+                                    <p>📍 <strong>Lugar:</strong> ${evento.location}</p>
                                     <p>📅 <strong>Inicio:</strong> ${inicioFormateado}</p>
                                     <p>🏁 <strong>Fin:</strong> ${finFormateado}</p>
                                     <p>🛠️ <strong>Equipo Técnico:</strong> <br>
@@ -110,23 +197,19 @@ document.addEventListener('DOMContentLoaded', () => {
                 `;
                 contenedorEventos.innerHTML += tarjetaHtml;
             });
-
         } catch (error) {
             console.error('Error al cargar la grilla de eventos:', error);
         }
     }
 
-    // 3. FUNCIÓN PARA ELIMINAR (DELETE)
+    // Eliminar un evento (DELETE)
     window.eliminarEvento = async (id) => {
         if (!confirm('¿Estás seguro de que querés cancelar esta reserva de evento?')) return;
 
         try {
-            const respuesta = await fetch(`${API_URL}/${id}`, {
-                method: 'DELETE'
-            });
-
+            const respuesta = await fetch(`${API_EVENTS}/${id}`, { method: 'DELETE' });
             if (respuesta.ok) {
-                cargarEventos(); // Volver a renderizar la grilla actualizada
+                cargarEventos();
             } else {
                 alert('No se pudo eliminar el evento.');
             }
@@ -135,6 +218,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    // Al cargar la página por primera vez, traemos lo que ya esté guardado
+    // -------------------------------------------------------------
+    // 4. INICIALIZACIÓN
+    // -------------------------------------------------------------
+    cargarArtistas();
     cargarEventos();
 });

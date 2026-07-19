@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>StageFlow - Gestión de Eventos Artísticos</title>
-    <!-- Mantenemos Bulma CSS -->
+    <title>StageFlow - Panel de Logística</title>
+    <!-- Bulma CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.0/css/bulma.min.css">
 </head>
 <body>
@@ -21,38 +21,60 @@
             <div class="navbar-menu">
                 <div class="navbar-start">
                     <a class="navbar-item" href="index.html">Inicio</a>
-                    <a class="navbar-item is-active" href="eventos.html">Gestionar Eventos</a>
+                    <a class="navbar-item is-active" href="eventos.html">Logística General</a>
                     <a class="navbar-item" href="nosotros.html">Nosotros</a>
-                </div>
-                <div class="navbar-end">
-                    <div class="navbar-item">
-                        <div class="buttons">
-                            <a class="button is-primary" href="#registro">
-                                <strong>Comenzar</strong>
-                            </a>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
     </nav>
 
-    <!-- SECCIÓN PRINCIPAL: IMAGEN Y NUEVO FORMULARIO DE RESERVA -->
+    <!-- CUERPO PRINCIPAL EN COLUMNAS -->
     <section class="section">
         <div class="container">
-            <div class="columns is-vcentered">
+            <div class="columns is-desktop">
                 
-                <!-- COLUMNA IZQUIERDA: TU IMAGEN ORIGINAL -->
-                <div class="column is-half">
-                    <figure class="image">
-                        <img src="evento1.PNG" alt="Control de Escenario en Vivo" style="border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
-                    </figure>
+                <!-- SECCIÓN IZQUIERDA: GESTIÓN DE ARTISTAS -->
+                <div class="column is-one-third-desktop">
+                    <!-- Formulario de Artistas -->
+                    <div class="box">
+                        <h2 class="title is-4 has-text-centered">✨ Registrar Artista</h2>
+                        <form id="form-artista">
+                            <div class="field">
+                                <label class="label">Nombre de la Banda / Artista:</label>
+                                <div class="control">
+                                    <input class="input" type="text" id="nombre-artista" placeholder="Ej: Duki" required>
+                                </div>
+                            </div>
+
+                            <div class="field">
+                                <label class="label">Género Musical:</label>
+                                <div class="control">
+                                    <input class="input" type="text" id="genero-artista" placeholder="Ej: Trap / Rock" required>
+                                </div>
+                            </div>
+
+                            <div class="field">
+                                <button type="submit" class="button is-link is-fullwidth has-text-weight-bold">
+                                    GUARDAR ARTISTA
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Lista de Artistas Disponibles -->
+                    <div class="box">
+                        <h3 class="subtitle is-5 has-text-weight-bold">🎵 Artistas Disponibles</h3>
+                        <div id="lista-artistas" style="max-height: 300px; overflow-y: auto;">
+                            <!-- Los artistas cargados en la base de datos aparecerán acá en forma de lista compacta -->
+                            <p class="has-text-grey-light is-italic">Cargando artistas...</p>
+                        </div>
+                    </div>
                 </div>
 
-                <!-- COLUMNA DERECHA: NUEVO FORMULARIO CON MULTIDÍAS Y PLANILLA -->
-                <div class="column is-half">
+                <!-- SECCIÓN DERECHA: RESERVA DE EVENTOS -->
+                <div class="column is-two-thirds-desktop">
                     <div class="box">
-                        <h2 class="title is-3 has-text-centered">Reservar Evento</h2>
+                        <h2 class="title is-3 has-text-centered">🗓️ Reservar Evento</h2>
                         
                         <form id="form-evento">
                             <!-- Nombre -->
@@ -71,13 +93,13 @@
                                 </div>
                             </div>
 
-                            <!-- Rango de Tiempo (Soporta múltiples días con datetime-local) -->
+                            <!-- Rango de Tiempo adaptado a DATETIME -->
                             <div class="columns">
                                 <div class="column">
                                     <div class="field">
                                         <label class="label">Inicio (Fecha y Hora):</label>
                                         <div class="control">
-                                            <input class="input" type="datetime-local" id="fecha-inicio" name="fecha_inicio" required>
+                                            <input class="input" type="datetime-local" id="start-time" name="start_time" required>
                                         </div>
                                     </div>
                                 </div>
@@ -85,7 +107,7 @@
                                     <div class="field">
                                         <label class="label">Fin (Fecha y Hora):</label>
                                         <div class="control">
-                                            <input class="input" type="datetime-local" id="fecha-fin" name="fecha_fin" required>
+                                            <input class="input" type="datetime-local" id="end-time" name="end_time" required>
                                         </div>
                                     </div>
                                 </div>
@@ -94,7 +116,7 @@
                             <!-- Planilla de Equipo Técnico Requerido -->
                             <div class="field">
                                 <label class="label">Planilla de Equipo Técnico:</label>
-                                <div class="box" style="max-height: 150px; overflow-y: auto; background-color: dark;">
+                                <div class="box" style="max-height: 120px; overflow-y: auto;">
                                     <div class="control">
                                         <label class="checkbox is-block mb-2">
                                             <input type="checkbox" name="equipo" value="Sonido Profesional"> 🔊 PA / Sonido Profesional
@@ -129,17 +151,17 @@
         </div>
     </section>
 
-    <!-- SECCIÓN PARA MOSTRAR LAS TARJETAS GENERADAS -->
+    <!-- SECCIÓN CRONOGRAMA DE EVENTOS -->
     <section class="section has-background">
         <div class="container">
-            <h3 class="title is-4">Cronograma de Eventos Reservados</h3>
+            <h3 class="title is-4">📋 Cronograma de Eventos Reservados</h3>
             <div id="contenedor-eventos" class="columns is-multiline">
-                <!-- Las tarjetas de Bulma que creemos en eventos.js se inyectarán acá -->
+                <!-- Las tarjetas de eventos se inyectarán acá -->
             </div>
         </div>
     </section>
 
-        <!-- FOOTER SIMPLE -->
+    <!-- FOOTER SIMPLE -->
     <footer class="footer has-background-black has-text-white-ter py-5">
         <div class="content has-text-centered">
             <p>
