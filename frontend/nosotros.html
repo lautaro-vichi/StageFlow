@@ -1,12 +1,15 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>StageFlow - Gestión de Eventos Artísticos</title>
+    <title>StageFlow - Nuestro Equipo</title>
+    <!-- Mantenemos Bulma CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.0/css/bulma.min.css">
 </head>
 <body>
+    
+    <!-- BARRA DE NAVEGACIÓN COMPARTIDA -->
     <nav class="navbar is-black" role="navigation" aria-label="main navigation">
         <div class="container">
             <div class="navbar-brand">
@@ -19,13 +22,12 @@
                 <div class="navbar-start">
                     <a class="navbar-item" href="index.html">Inicio</a>
                     <a class="navbar-item" href="eventos.html">Gestionar Eventos</a>
-                    <a class="navbar-item" href="nosotros.html">Nosotros</a>
+                    <a class="navbar-item is-active" href="nosotros.html">Nosotros</a>
                 </div>
-
                 <div class="navbar-end">
                     <div class="navbar-item">
                         <div class="buttons">
-                            <a class="button is-primary" href="#registro">
+                            <a class="button is-primary" href="eventos.html">
                                 <strong>Comenzar</strong>
                             </a>
                         </div>
@@ -35,91 +37,81 @@
         </div>
     </nav>
 
-    <section class="section">
-        <div class="container">
-            <div class="has-text-centered mb-6">
-                <h1 class="title is-1">El Equipo Detrás de StageFlow</h1>
-                <p class="subtitle is-5 has-text-grey">Conocé a los desarrolladores encargados de optimizar tus flujos de trabajo en el escenario</p>
+    <!-- SECCIÓN DE CABECERA -->
+    <section class="hero is-small is-dark">
+        <div class="hero-body">
+            <div class="container has-text-centered">
+                <h1 class="title is-2">Los Desarrolladores detrás de StageFlow</h1>
+                <p class="subtitle is-5 has-text-grey mt-2">
+                    El equipo encargado de diseñar, programar y administrar el sistema de gestión de eventos.
+                </p>
             </div>
-
-            <div class="columns is-centered">
-                
-                <div class="column is-one-third">
-                    <div class="card">
-                        <div class="card-content has-text-centered">
-                            <div class="is-size-1 mb-2">🎨</div>
-                            <p class="title is-4">Integrante 1</p>
-                            <p class="subtitle is-6 has-text-primary">Diseñador Frontend / UI</p>
-                            <div class="content">
-                                Responsable de la estructura visual de la aplicación, maquetado adaptativo y experiencia de usuario.
-                            </div>
-                            <button class="button is-link is-small btn-perfil" data-rol="Frontend" data-tech="HTML5, CSS3, Bulma CSS, Flexbox, Maquetado Semántico">
-                                Ver Detalles Técnicos
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="column is-one-third">
-                    <div class="card">
-                        <div class="card-content has-text-centered">
-                            <div class="is-size-1 mb-2">⚙️</div>
-                            <p class="title is-4">Integrante 2</p>
-                            <p class="subtitle is-6 has-text-primary">Desarrollador Backend & DB</p>
-                            <div class="content">
-                                Encargado de modelar la base de datos relacional, las rutas de la API REST y las reglas lógicas del negocio.
-                            </div>
-                            <button class="button is-link is-small btn-perfil" data-rol="Backend" data-tech="Node.js, Express, SQL Puro, PostgreSQL / MySQL, Integridad Referencial">
-                                Ver Detalles Técnicos
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="column is-one-third">
-                    <div class="card">
-                        <div class="card-content has-text-centered">
-                            <div class="is-size-1 mb-2">🐳</div>
-                            <p class="title is-4">Integrante 3</p>
-                            <p class="subtitle is-6 has-text-primary">Fullstack & DevOps</p>
-                            <div class="content">
-                                Encargado de conectar las pantallas con el servidor, empaquetar el sistema en contenedores y automatizar comandos.
-                            </div>
-                            <button class="button is-link is-small btn-perfil" data-rol="Integración" data-tech="JavaScript Asincrónico, Fetch API, Docker, Docker Compose, Makefile, Git Branches">
-                                Ver Detalles Técnicos
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-            </div> </div>
+        </div>
     </section>
 
-    <div class="modal" id="modal-experiencia">
-        <div class="modal-background" id="modal-bg-close"></div>
-        <div class="modal-card">
-            <header class="modal-card-head">
-                <p class="modal-card-title" id="modal-titulo">Tecnologías Aplicadas</p>
-                <button class="delete" aria-label="close" id="modal-btn-close"></button>
-            </header>
-            <section class="modal-card-body">
-                <div class="content">
-                    <h4 class="title is-5">Especialidad: <span id="modal-rol" class="has-text-link"></span></h4>
-                    <p>Para este proyecto final de cátedra, el estudiante defendió y aplicó de forma práctica las siguientes herramientas del cronograma:</p>
-                    <div class="box has-background-light">
-                        <code id="modal-lista-tech" class="has-text-weight-bold"></code>
+    <!-- SECCIÓN DE INTEGRANTES -->
+    <section class="section">
+        <div class="container">
+            <div class="columns is-centered mt-4">
+                
+                <!-- INTEGRANTE 1: FRANCO -->
+                <div class="column is-4">
+                    <div class="card" style="border-radius: 10px; overflow: hidden; height: 100%;">
+                        <div class="card-content has-text-centered">
+                            <!-- Avatar temporal con Emoji (Podés cambiarlo por una foto real más adelante) -->
+                            <div class="is-size-1 mb-3">💻</div>
+                            
+                            <h3 class="title is-4 mb-1">Franco</h3>
+                            <span class="tag is-primary is-light has-text-weight-bold mb-4">Frontend Developer & UX</span>
+                            
+                            <p class="has-text-grey">
+                                Encargado de estructurar la interfaz de usuario, integrar los estilos visuales con Bulma CSS y conectar los formularios interactivos para el control de reservas multidía y la planilla técnica.
+                            </p>
+                        </div>
+                        <footer class="card-footer has-background-dark">
+                            <div class="card-footer-item">
+                                <span class="has-text-weight-semibold is-size-7">ADMINISTRADOR</span>
+                            </div>
+                        </footer>
                     </div>
                 </div>
-            </section>
-            <footer class="modal-card-foot">
-                <button class="button is-primary" id="modal-foot-close">Entendido</button>
-            </footer>
-        </div>
-    </div>
 
-    <script src="js/index.js"></script>
-</body>
-</html>
+                <!-- INTEGRANTE 2: LAUTARO -->
+                <div class="column is-4">
+                    <div class="card" style="border-radius: 10px; overflow: hidden; height: 100%;">
+                        <div class="card-content has-text-centered">
+                            <!-- Avatar temporal con Emoji -->
+                            <div class="is-size-1 mb-3">⚙️</div>
+                            
+                            <h3 class="title is-4 mb-1">Lautaro</h3>
+                            <span class="tag is-link is-light has-text-weight-bold mb-4">Backend Developer & DevOps</span>
+                            
+                            <p class="has-text-grey">
+                                Responsable del motor del sistema. Desarrolló el servidor Express, diseñó la estructura de la base de datos MySQL y configuró la arquitectura en Docker para asegurar un entorno sólido y escalable.
+                            </p>
+                        </div>
+                        <footer class="card-footer has-background-dark">
+                            <div class="card-footer-item">
+                                <span class="has-text-weight-semibold is-size-7">ADMINISTRADOR</span>
+                            </div>
+                        </footer>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER SIMPLE -->
+    <footer class="footer has-background-black has-text-white-ter py-5 mt-6">
+        <div class="content has-text-centered">
+            <p>
+                <strong class="has-text-white">StageFlow</strong> - Proyecto de Gestión de Eventos © 2026.
+            </p>
+        </div>
+    </footer>
+
+    
 
 </body>
 </html>

@@ -1,13 +1,15 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>StageFlow - Gestión de Eventos Artísticos</title>
+    <!-- Mantenemos Bulma CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.0/css/bulma.min.css">
 </head>
 <body>
-    <!--BARRA DE BÚSQUEDA-->
+    
+    <!-- BARRA DE NAVEGACIÓN ORIGINAL -->
     <nav class="navbar is-black" role="navigation" aria-label="main navigation">
         <div class="container">
             <div class="navbar-brand">
@@ -19,10 +21,9 @@
             <div class="navbar-menu">
                 <div class="navbar-start">
                     <a class="navbar-item" href="index.html">Inicio</a>
-                    <a class="navbar-item" href="eventos.html">Gestionar Eventos</a>
+                    <a class="navbar-item is-active" href="eventos.html">Gestionar Eventos</a>
                     <a class="navbar-item" href="nosotros.html">Nosotros</a>
                 </div>
-
                 <div class="navbar-end">
                     <div class="navbar-item">
                         <div class="buttons">
@@ -35,33 +36,119 @@
             </div>
         </div>
     </nav>
-<!--COLUMNA IMAGEN-->
-<section class="section">
-    <div class="container">
-        
-        <div class="columns is-vcentered">
-            
-            <div class="column is-half">
-                <figure class="image">
-                    <img src="evento1.PNG" alt="Control de Escenario en Vivo" style="border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
-                </figure>
-            </div>
-<!--COLUMNA TEXTO-->
-            <div class="column is-half">
-                <span class="tag is-primary is-light has-text-weight-bold mb-3">Texto pequeño decorativo</span>
-                <h2 class="title is-2">Texto al lado derecho de la imagen</h2>
-                <p class="subtitle is-5 has-text-grey mt-3">
-                    Texto de relleno para probar el contenido
-                </p>
-                <p class="mb-4">
-                    texto aún más pequeño para practicar.
-                </p>
-                <a href="eventos.html" class="button is-link">
-                    Botón para más información. Próximamente ➔
-                </a>
-            </div>
 
-        </div> </div>
-</section>
+    <!-- SECCIÓN PRINCIPAL: IMAGEN Y NUEVO FORMULARIO DE RESERVA -->
+    <section class="section">
+        <div class="container">
+            <div class="columns is-vcentered">
+                
+                <!-- COLUMNA IZQUIERDA: TU IMAGEN ORIGINAL -->
+                <div class="column is-half">
+                    <figure class="image">
+                        <img src="evento1.PNG" alt="Control de Escenario en Vivo" style="border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+                    </figure>
+                </div>
+
+                <!-- COLUMNA DERECHA: NUEVO FORMULARIO CON MULTIDÍAS Y PLANILLA -->
+                <div class="column is-half">
+                    <div class="box">
+                        <h2 class="title is-3 has-text-centered">Reservar Evento</h2>
+                        
+                        <form id="form-evento">
+                            <!-- Nombre -->
+                            <div class="field">
+                                <label class="label">Nombre del Evento / Show:</label>
+                                <div class="control">
+                                    <input class="input" type="text" id="nombre" name="nombre" placeholder="Ej: Festival Rock Verano" required>
+                                </div>
+                            </div>
+
+                            <!-- Lugar -->
+                            <div class="field">
+                                <label class="label">Lugar / Estadio:</label>
+                                <div class="control">
+                                    <input class="input" type="text" id="lugar" name="lugar" placeholder="Ej: Estadio River Plate" required>
+                                </div>
+                            </div>
+
+                            <!-- Rango de Tiempo (Soporta múltiples días con datetime-local) -->
+                            <div class="columns">
+                                <div class="column">
+                                    <div class="field">
+                                        <label class="label">Inicio (Fecha y Hora):</label>
+                                        <div class="control">
+                                            <input class="input" type="datetime-local" id="fecha-inicio" name="fecha_inicio" required>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="column">
+                                    <div class="field">
+                                        <label class="label">Fin (Fecha y Hora):</label>
+                                        <div class="control">
+                                            <input class="input" type="datetime-local" id="fecha-fin" name="fecha_fin" required>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Planilla de Equipo Técnico Requerido -->
+                            <div class="field">
+                                <label class="label">Planilla de Equipo Técnico:</label>
+                                <div class="box" style="max-height: 150px; overflow-y: auto; background-color: dark;">
+                                    <div class="control">
+                                        <label class="checkbox is-block mb-2">
+                                            <input type="checkbox" name="equipo" value="Sonido Profesional"> 🔊 PA / Sonido Profesional
+                                        </label>
+                                        <label class="checkbox is-block mb-2">
+                                            <input type="checkbox" name="equipo" value="Iluminación Robótica"> 💡 Iluminación Robótica / LED
+                                        </label>
+                                        <label class="checkbox is-block mb-2">
+                                            <input type="checkbox" name="equipo" value="Pantallas LED"> 🖥️ Pantallas LED Gigantes
+                                        </label>
+                                        <label class="checkbox is-block mb-2">
+                                            <input type="checkbox" name="equipo" value="Estructura Escenario"> 🏗️ Estructura / Tarimas
+                                        </label>
+                                        <label class="checkbox is-block">
+                                            <input type="checkbox" name="equipo" value="Generador Eléctrico"> ⚡ Grupo Electrógeno
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Botón de Envío -->
+                            <div class="field mt-5">
+                                <button type="submit" class="button is-primary is-fullwidth has-text-weight-bold">
+                                    CONFIRMAR RESERVA
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- SECCIÓN PARA MOSTRAR LAS TARJETAS GENERADAS -->
+    <section class="section has-background">
+        <div class="container">
+            <h3 class="title is-4">Cronograma de Eventos Reservados</h3>
+            <div id="contenedor-eventos" class="columns is-multiline">
+                <!-- Las tarjetas de Bulma que creemos en eventos.js se inyectarán acá -->
+            </div>
+        </div>
+    </section>
+
+        <!-- FOOTER SIMPLE -->
+    <footer class="footer has-background-black has-text-white-ter py-5">
+        <div class="content has-text-centered">
+            <p>
+                <strong class="has-text-white">StageFlow</strong> - Proyecto de Gestión de Eventos © 2026.
+            </p>
+        </div>
+    </footer>
+
+    <!-- Script de lógica -->
+    <script src="js/eventos.js"></script>
 </body>
 </html>

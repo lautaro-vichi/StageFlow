@@ -3,12 +3,112 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>StageFlow</title>
-
-    <link rel="stylesheet" href="css/style.css">
+    <title>StageFlow - Gestión de Eventos Artísticos</title>
+    <!-- Mantenemos Bulma CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.0/css/bulma.min.css">
 </head>
+<body>
+    
+    <!-- BARRA DE NAVEGACIÓN COMPARTIDA -->
+    <nav class="navbar is-black" role="navigation" aria-label="main navigation">
+        <div class="container">
+            <div class="navbar-brand">
+                <a class="navbar-item has-text-weight-bold is-size-4" href="index.html">
+                    ⚡ StageFlow
+                </a>
+            </div>
+            
+            <div class="navbar-menu">
+                <div class="navbar-start">
+                    <a class="navbar-item is-active" href="index.html">Inicio</a>
+                    <a class="navbar-item" href="eventos.html">Gestionar Eventos</a>
+                    <a class="navbar-item" href="nosotros.html">Nosotros</a>
+                </div>
+                <div class="navbar-end">
+                    <div class="navbar-item">
+                        <div class="buttons">
+                            <a class="button is-primary" href="eventos.html">
+                                <strong>Comenzar</strong>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
 
+    <!-- SECCIÓN HERO (BIENVENIDA IMPACTANTE) -->
+    <section class="hero is-medium is-dark is-bold">
+        <div class="hero-body">
+            <div class="container has-text-centered">
+                <h1 class="title is-1">
+                    Controlá tus Shows como un Profesional
+                </h1>
+                <p class="subtitle is-4 mt-3 has-text-grey-light">
+                    Planificá fechas, gestioná el equipamiento técnico y asegurá el éxito de cada escenario desde un solo lugar.
+                </p>
+                <div class="buttons is-centered mt-5">
+                    <a href="eventos.html" class="button is-primary is-large has-text-weight-bold">
+                        Reservar un Evento ➔
+                    </a>
+                    <a href="nosotros.html" class="button is-light is-large">
+                        Conocenos
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
 
+    <!-- SECCIÓN DE CARACTERÍSTICAS / QUÉ HACE STAGEFLOW -->
+    <section class="section">
+        <div class="container">
+            <div class="columns is-multiline has-text-centered mt-5">
+                
+                <!-- Card 1 -->
+                <div class="column is-one-third">
+                    <div class="box p-5" style="height: 100%;">
+                        <div class="is-size-2 mb-3">📅</div>
+                        <h3 class="title is-4">Bloques Multidía</h3>
+                        <p class="has-text-grey">
+                            Olvidate de las limitaciones. Agendá festivales, giras o puestas en escena que duren más de un día configurando inicios y finales exactos.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="column is-one-third">
+                    <div class="box p-5" style="height: 100%;">
+                        <div class="is-size-2 mb-3">🛠️</div>
+                        <h3 class="title is-4">Planilla Técnica</h3>
+                        <p class="has-text-grey">
+                            Asigná al instante PA, consolas de sonido, robóticas LED y pantallas gigantes mediante nuestra plantilla de verificación rápida.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="column is-one-third">
+                    <div class="box p-5" style="height: 100%;">
+                        <div class="is-size-2 mb-3">🚀</div>
+                        <h3 class="title is-4">Monitoreo en Vivo</h3>
+                        <p class="has-text-grey">
+                            Visualizá todo tu cronograma de reservas de manera dinámica. Añadí, controlá o cancelá bloques técnicos en tiempo real con conexión directa.
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER SIMPLE -->
+    <footer class="footer has-background-black has-text-white-ter py-5">
+        <div class="content has-text-centered">
+            <p>
+                <strong class="has-text-white">StageFlow</strong> - Proyecto de Gestión de Eventos © 2026.
+            </p>
+        </div>
+    </footer>
 
 </body>
 </html>
