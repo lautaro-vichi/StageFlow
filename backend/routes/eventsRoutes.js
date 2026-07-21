@@ -1,21 +1,42 @@
 const express = require("express");
 const router = express.Router();
+const {
+    getEvents,
+    getEventById,
+    createEvent,
+    updateEvent,
+    deleteEvent,
+    getEventArtists,
+    getEventResources,
+    addArtistToEvent,
+    addResourceToEvent,
+    removeArtistFromEvent,
+    removeResourceFromEvent
+} = require("../controllers/eventsController");
 
-const eventsController = require("../controllers/eventsController");
+// --- RUTAS BASE (/api/events) ---
+router.route("/")
+    .get(getEvents)
+    .post(createEvent);
 
-// controllers para eventos
-router.get("/", eventsController.getEvents);
+// --- RUTAS DE EVENTO POR ID (/api/events/:id) ---
+router.route("/:id")
+    .get(getEventById)
+    .put(updateEvent)
+    .delete(deleteEvent);
 
-router.get("/:id", eventsController.getEventById);
+// --- ARTISTAS EN EVENTO ---
+router.route("/:id/artists")
+    .get(getEventArtists)
+    .post(addArtistToEvent);
 
-router.post("/", eventsController.createEvent);
+router.delete("/:id/artists/:artistId", removeArtistFromEvent);
 
-router.put("/:id", eventsController.updateEvent);
+// --- RECURSOS EN EVENTO ---
+router.route("/:id/resources")
+    .get(getEventResources)
+    .post(addResourceToEvent);
 
-router.delete("/:id", eventsController.deleteEvent);
-
+router.delete("/:id/resources/:resourceId", removeResourceFromEvent);
 
 module.exports = router;
-
-
-

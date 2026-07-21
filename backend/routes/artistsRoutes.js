@@ -1,17 +1,16 @@
 const express = require("express");
 const router = express.Router();
+const { getArtists, getArtistById, createArtist, updateArtist, deleteArtist } = require("../controllers/artistsController");
 
-const artistsController = require("../controllers/artistsController");
+// Ruta raíz: /api/artists
+router.route("/")
+    .get(getArtists)
+    .post(createArtist);
 
-router.get("/", artistsController.getArtists);
-
-router.get("/:id", artistsController.getArtistById);
-
-router.post("/", artistsController.createArtist);
-
-router.put("/:id", artistsController.updateArtist);
-
-router.delete("/:id", artistsController.deleteArtist);
+// Ruta por ID: /api/artists/:id
+router.route("/:id")
+    .get(getArtistById)
+    .put(updateArtist)
+    .delete(deleteArtist);
 
 module.exports = router;
-
