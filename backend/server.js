@@ -20,23 +20,6 @@ const port = 3000;
 app.use(express.json());
 app.use(cors());
 
-async function conectarDB() {
-    try {
-        console.log("Intentando conectar...");
-
-        await pool.query("SELECT 1");
-
-        console.log("Conexión exitosa.");
-
-    } catch (error) {
-
-        console.error(error);
-
-    }
-}
-
-conectarDB();
-
 app.use("/events", eventsRoutes);
 
 app.use("/artists", artistsRoutes);
@@ -49,7 +32,34 @@ app.use("/events", eventResourceRoutes);
 
 
 
-app.listen(port, () => {
-    console.log(`Servidor iniciado en el puerto ${port}`);
-});
+async function conectarDB() {
+    while (true) {
+        try {
+            console.log("Intentando conectar a MySQL...");
+
+            await pool.query("SELECT 1");
+
+            console.log("¡MySQL conectado!");
+            break;
+
+        } catch (error) {
+            console.log("MySQL todavía no está listo. Reintentando en 3 segundos...");
+            await new Promise(resolve => setTimeout(resolve, 3000));
+        }
+    }
+}
+
+async function iniciarServidor() {
+    await conectarDB();
+
+    app.listen(port, () => {
+        console.log(`Servidor iniciado en el puerto ${port}`);
+    });
+}
+
+iniciarServidor();
+
+
+
+
 

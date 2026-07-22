@@ -2,6 +2,32 @@ version: "3.8"
 
 services:
 
+  frontend:
+   build: ./frontend
+   container_name: stageflow-frontend
+   ports:
+    - "8080:80"
+   volumes:
+    - ./frontend:/usr/share/nginx/html    
+   depends_on:
+    - backend
+
+  backend:
+
+   build: ./backend
+   container_name: stageflow-backend
+   ports:
+    - "3000:3000"
+   volumes:
+    - ./backend:/app    
+   environment:
+      DB_HOST: mysql
+      DB_USER: root
+      DB_PASSWORD: root
+      DB_NAME: stage_flow
+   depends_on:
+    - mysql
+
   mysql:
     image: mysql:8.0
     container_name: stageflow-mysql
@@ -21,3 +47,5 @@ services:
 
 volumes:
   mysql_data:
+
+  
