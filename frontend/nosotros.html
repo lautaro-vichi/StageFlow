@@ -6,7 +6,7 @@
     <title>Nosotros | StageFlow</title>
     <meta name="description" content="Conoce al equipo detrás de StageFlow y nuestra misión para revolucionar la gestión de eventos artísticos en vivo.">
     
-    <!-- Framework Bulma -->
+    <!-- Framework Bulma CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.0/css/bulma.min.css">
     
     <!-- Ajustes oscuros consistentes con el resto del sitio -->
@@ -21,6 +21,7 @@
             border-radius: 8px;
             overflow: hidden;
             transition: transform 0.3s ease;
+            height: 100%;
         }
         .team-card:hover {
             transform: translateY(-5px);
@@ -52,8 +53,7 @@
                 <div id="navbarMenuPrincipal" class="navbar-menu">
                     <div class="navbar-start">
                         <a class="navbar-item" href="principal.html">Inicio</a>
-                        <a class="navbar-item" href="eventos.html">Gestionar Eventos</a>
-                        <!-- Clase is-active aplicada a Nosotros -->
+                        <a class="navbar-item" href="eventos.html">Logística General</a>
                         <a class="navbar-item is-active" href="nosotros.html" aria-current="page">Nosotros</a>
                     </div>
                 </div>
@@ -122,54 +122,35 @@
             </div>
         </section>
 
-        <!-- SECCIÓN: EL EQUIPO -->
+        <!-- SECCIÓN: EL EQUIPO (FRANCO & LAUTARO) -->
         <section class="section has-background-dark">
             <div class="container">
-                <h2 class="title is-3 has-text-centered has-text-white mb-6">El Equipo Fundador</h2>
+                <h2 class="title is-3 has-text-centered has-text-white mb-6">Los Desarrolladores de StageFlow</h2>
                 <div class="columns is-centered">
                     
-                    <!-- Tarjeta de Miembro 1 (Puedes duplicar este bloque si son más personas) -->
-                    <div class="column is-4-tablet is-3-desktop">
+                    <!-- FRANCO -->
+                    <div class="column is-4-tablet is-4-desktop">
                         <div class="team-card has-text-centered p-5">
-                            <figure class="image is-128x128 is-inline-block mb-4">
-                                <!-- Reemplaza este enlace por tu foto real -->
-                                <img class="is-rounded" src="" alt="Foto del fundador" style="object-fit: cover;">
-                            </figure>
-                            <h3 class="title is-5 has-text-white mb-1">Nombre aquí</h3>
-                            <p class="subtitle is-6 has-text-primary">Fundador & Desarrollador Principal</p>
-                            <p class="is-size-7 has-text-grey-light mt-3">
-                                Apasionado por la tecnología y la producción de eventos, creador de la arquitectura de StageFlow.
+                            <div class="is-size-1 mb-3">💻</div>
+                            <h3 class="title is-4 mb-1 has-text-white">Franco</h3>
+                            <span class="tag is-primary is-light has-text-weight-bold mb-4">Frontend Developer & UX</span>
+                            <p class="is-size-6 has-text-grey-light mt-2">
+                                Encargado de estructurar la interfaz de usuario, integrar los estilos visuales con Bulma CSS y conectar los formularios interactivos para el control de la logística general.
                             </p>
                         </div>
                     </div>
 
-
-                    <div class="column is-4-tablet is-3-desktop">
+                    <!-- LAUTARO -->
+                    <div class="column is-4-tablet is-4-desktop">
                         <div class="team-card has-text-centered p-5">
-                            <figure class="image is-128x128 is-inline-block mb-4">
-                                <img class="is-rounded" src="" alt="Foto del socio" style="object-fit: cover;">
-                            </figure>
-                            <h3 class="title is-5 has-text-white mb-1">Nombre Socio</h3>
-                            <p class="subtitle is-6 has-text-primary">Co-Fundador & Diseño Técnico</p>
-                            <p class="is-size-7 has-text-grey-light mt-3">
-                                Especialista en flujos de trabajo e interfaces de usuario para producciones masivas.
+                            <div class="is-size-1 mb-3">⚙️</div>
+                            <h3 class="title is-4 mb-1 has-text-white">Lautaro</h3>
+                            <span class="tag is-link is-light has-text-weight-bold mb-4">Backend Developer & DevOps</span>
+                            <p class="is-size-6 has-text-grey-light mt-2">
+                                Responsable del motor del sistema. Desarrolló el servidor Express, diseñó la estructura de la base de datos MySQL y configuró la arquitectura técnica para asegurar un entorno escalable.
                             </p>
                         </div>
                     </div>
-
-                    <div class="column is-4-tablet is-3-desktop">
-                        <div class="team-card has-text-centered p-5">
-                            <figure class="image is-128x128 is-inline-block mb-4">
-                                <img class="is-rounded" src="" alt="Foto del socio" style="object-fit: cover;">
-                            </figure>
-                            <h3 class="title is-5 has-text-white mb-1">Nombre Socio</h3>
-                            <p class="subtitle is-6 has-text-primary">Co-Fundador & Diseño Técnico</p>
-                            <p class="is-size-7 has-text-grey-light mt-3">
-                                Especialista en flujos de trabajo e interfaces de usuario para producciones masivas.
-                            </p>
-                        </div>
-                    </div>
-                    
 
                 </div>
             </div>
@@ -190,7 +171,7 @@
         document.addEventListener('DOMContentLoaded', () => {
             const $navbarBurgers = Array.prototype.slice.call(document.querySelectorAll('.navbar-burger'), 0);
             if ($navbarBurgers.length > 0) {
-                $navbarBurgers.forEach( el => {
+                $navbarBurgers.forEach(el => {
                     el.addEventListener('click', () => {
                         const target = el.dataset.target;
                         const $target = document.getElementById(target);

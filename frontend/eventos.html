@@ -1,15 +1,16 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+    <link rel="shortcut icon" href="#">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestionar Eventos | StageFlow</title>
     <meta name="description" content="Panel de administración de StageFlow. Controla escaletas, asignación de artistas y recursos técnicos en tiempo real.">
     
-    <!-- Framework Bulma -->
+    <!-- Framework Bulma CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.0/css/bulma.min.css">
     
-    <!-- Ajustes oscuros personalizados para combinar con el diseño de tu app -->
+    <!-- Estilos personalizados -->
     <style>
         body {
             background-color: #1a1a1a;
@@ -20,21 +21,24 @@
             color: #ffffff !important;
             border: 1px solid #363636;
         }
-        .box .title, .box .label {
+        .box .title, .box .label, .box .subtitle {
             color: #ffffff !important;
         }
-        .input, .select select {
+        .input, .select select, .textarea {
             background-color: #363636 !important;
             border-color: #4a4a4a !important;
             color: #ffffff !important;
         }
-        .input::placeholder {
+        .input::placeholder, .textarea::placeholder {
             color: #888888;
         }
         .status-badge {
             font-size: 0.75rem;
             text-transform: uppercase;
             font-weight: bold;
+        }
+        .border-bottom-dark {
+            border-bottom: 1px solid #363636;
         }
     </style>
 </head>
@@ -59,7 +63,7 @@
                 <div id="navbarMenuPrincipal" class="navbar-menu">
                     <div class="navbar-start">
                         <a class="navbar-item" href="principal.html">Inicio</a>
-                        <a class="navbar-item is-active" href="eventos.html" aria-current="page">Gestionar Eventos</a>
+                        <a class="navbar-item is-active" href="eventos.html" aria-current="page">Logística General</a>
                         <a class="navbar-item" href="nosotros.html">Nosotros</a>
                     </div>
                 </div>
@@ -72,121 +76,251 @@
         <div class="hero-body">
             <div class="container">
                 <h1 class="title is-3 has-text-white">Panel de Control de Escenario</h1>
-                <h2 class="subtitle is-6 has-text-grey-light">Administra los bloques horarios, artistas y requerimientos de equipamiento.</h2>
+                <h2 class="subtitle is-6 has-text-grey-light">Administra la programación, asignación de artistas y requerimientos de equipamiento técnico.</h2>
             </div>
         </div>
     </section>
 
-    <!-- CONTENIDO PRINCIPAL -->
+    <!-- CONTENIDO PRINCIPAL EN COLUMNAS -->
     <main class="section">
         <div class="container">
             <div class="columns is-desktop">
                 
-                <!-- COLUMNA IZQUIERDA: FORMULARIO -->
+                <!-- SECCIÓN IZQUIERDA: GESTIÓN RÁPIDA DE ARTISTAS -->
                 <div class="column is-one-third-desktop">
+                    <!-- Formulario para Registrar Artista -->
                     <div class="box">
-                        <h3 class="title is-4 mb-4">Añadir Nuevo Show</h3>
+                        <h3 class="title is-4 has-text-centered mb-4">✨ Registrar Artista</h3>
+                        <form id="form-artista">
+                            <div class="field">
+                                <label class="label">Nombre de la Banda / Artista:</label>
+                                <div class="control">
+                                    <input class="input" type="text" id="nombre-artista" placeholder="Ej: Duki" required>
+                                </div>
+                            </div>
+
+                            <div class="field">
+                                <label class="label">Género Musical:</label>
+                                <div class="control">
+                                    <input class="input" type="text" id="genero-artista" placeholder="Ej: Trap / Rock" required>
+                                </div>
+                            </div>
+
+                            <div class="field mt-4">
+                                <button type="submit" class="button is-link is-fullwidth has-text-weight-bold">
+                                    GUARDAR ARTISTA
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Lista de Artistas Disponibles -->
+                    <div class="box">
+                        <h3 class="subtitle is-5 has-text-weight-bold mb-3">🎵 Artistas Registrados</h3>
+                        <div id="lista-artistas" style="max-height: 250px; overflow-y: auto;">
+                            <p class="has-text-grey-light is-italic">Cargando artistas...</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SECCIÓN DERECHA: CREAR / EDITAR EVENTO -->
+                <div class="column is-two-thirds-desktop">
+                    <div class="box">
+                        <h3 id="titulo-form-evento" class="title is-3 has-text-centered mb-4">🗓️ Agendar Nuevo Evento</h3>
                         
                         <form id="form-evento">
+                            <!-- Campo Oculto para ID durante Edición (PUT) -->
+                            <input type="hidden" id="evento-id" value="">
+
+                            <!-- Nombre del Evento -->
                             <div class="field">
-                                <label class="label">Nombre del Show / Artista</label>
+                                <label class="label">Nombre del Evento / Show:</label>
                                 <div class="control">
-                                    <input class="input" type="text" placeholder="Ej. Presentación Banda X" required>
+                                    <input class="input" type="text" id="nombre" name="name" placeholder="Ej: Festival Rock Verano" required>
                                 </div>
                             </div>
 
-                            <div class="columns is-mobile">
+                            <!-- Descripción -->
+                            <div class="field">
+                                <label class="label">Descripción:</label>
+                                <div class="control">
+                                    <textarea class="textarea" id="descripcion" name="description" placeholder="Detalles de la producción..." rows="2"></textarea>
+                                </div>
+                            </div>
+
+                            <!-- Lugar -->
+                            <div class="field">
+                                <label class="label">Lugar / Estadio / Escenario:</label>
+                                <div class="control">
+                                    <input class="input" type="text" id="lugar" name="location" placeholder="Ej: Estadio River Plate" required>
+                                </div>
+                            </div>
+
+                            <!-- Fechas e Inicio/Fin -->
+                            <div class="columns">
                                 <div class="column">
                                     <div class="field">
-                                        <label class="label">Hora Inicio</label>
+                                        <label class="label">Inicio (Fecha y Hora):</label>
                                         <div class="control">
-                                            <input class="input" type="time" required>
+                                            <input class="input" type="datetime-local" id="start-time" name="start_time" required>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="column">
                                     <div class="field">
-                                        <label class="label">Hora Fin</label>
+                                        <label class="label">Fin (Fecha y Hora):</label>
                                         <div class="control">
-                                            <input class="input" type="time" required>
+                                            <input class="input" type="datetime-local" id="end-time" name="end_time" required>
                                         </div>
                                     </div>
                                 </div>
                             </div>
 
+                            <!-- Estado del Evento -->
                             <div class="field">
-                                <label class="label">Equipamiento Crítico</label>
+                                <label class="label">Estado:</label>
                                 <div class="control">
                                     <div class="select is-fullwidth">
-                                        <select required>
-                                            <option value="" disabled selected>Seleccionar requerimiento...</option>
-                                            <option value="Pantallas LED + Sonido Line Array">Pantallas LED + Sonido Line Array</option>
-                                            <option value="Iluminación Robótica Avanzada">Iluminación Robótica Avanzada</option>
-                                            <option value="Soporte Acústico Completo">Soporte Acústico Completo</option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="field">
-                                <label class="label">Estado del Show</label>
-                                <div class="control">
-                                    <div class="select is-fullwidth">
-                                        <select>
+                                        <select id="estado" name="status">
                                             <option value="planificado">📅 Planificado</option>
                                             <option value="confirmado">✅ Confirmado</option>
-                                            <option value="en-curso">🎙️ En Curso</option>
+                                            <option value="en curso">🎙️ En Curso</option>
+                                            <option value="finalizado">🏁 Finalizado</option>
+                                            <option value="cancelado">❌ Cancelado</option>
                                         </select>
                                     </div>
                                 </div>
                             </div>
 
+                            <!-- Botones -->
                             <div class="field mt-5">
-                                <div class="control">
-                                    <button type="submit" class="button is-primary is-fullwidth">
-                                        <strong>Agendar Bloque</strong>
-                                    </button>
-                                </div>
+                                <button type="submit" id="btn-guardar-evento" class="button is-primary is-fullwidth has-text-weight-bold">
+                                    GUARDAR EVENTO
+                                </button>
+                                <button type="button" id="btn-cancelar-edicion" class="button is-light is-fullwidth mt-2 is-hidden" onclick="cancelarEdicion()">
+                                    Cancelar Edición
+                                </button>
                             </div>
                         </form>
                     </div>
                 </div>
 
-                <!-- COLUMNA DERECHA: CRONOGRAMA Y FILTROS -->
-                <div class="column is-two-thirds-desktop">
-                    
-                    <div class="level mb-5">
-                        <div class="level-left">
-                            <div class="level-item">
-                                <h3 class="title is-4 has-text-white">Cronograma del Día</h3>
-                            </div>
-                        </div>
-                        <div class="level-right">
-                            <div class="level-item">
-                                <div class="buttons has-addons">
-                                    <button class="button is-small is-selected is-link">Todos</button>
-                                    <button class="button is-small">Confirmados</button>
-                                    <button class="button is-small">En Curso</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Contenedor dinámico controlado por JS -->
-                    <div id="contenedor-eventos">
-                        <!-- Las tarjetas se inyectarán aquí mediante el archivo eventos.js -->
-                    </div>
-
-                    <!-- Mensaje si el filtro no devuelve nada -->
-                    <div id="mensaje-vacio" class="notification is-dark has-text-centered is-hidden" style="border: 1px dashed #4a4a4a;">
-                        No hay shows programados que coincidan con este estado.
-                    </div>
-
-                </div>
-
             </div>
         </div>
     </main>
+
+    <!-- SECCIÓN CRONOGRAMA Y FILTROS -->
+    <section class="section pt-0">
+        <div class="container">
+            <div class="level mb-5">
+                <div class="level-left">
+                    <div class="level-item">
+                        <h3 class="title is-4 has-text-white">📋 Cronograma de Eventos Reservados</h3>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Contenedor dinámico controlado por eventos.js -->
+            <div id="contenedor-eventos" class="columns is-multiline">
+                <!-- Las tarjetas se inyectan dinámicamente -->
+            </div>
+
+            <div id="mensaje-vacio" class="notification is-dark has-text-centered is-hidden" style="border: 1px dashed #4a4a4a;">
+                No hay shows o eventos registrados en el sistema.
+            </div>
+        </div>
+    </section>
+
+    <!-- MODAL DE DETALLE DEL EVENTO -->
+    <div id="modal-detalle" class="modal">
+      <div class="modal-background" onclick="cerrarModal()"></div>
+      <div class="modal-card" style="width: 80%; max-width: 900px;">
+        
+        <header class="modal-card-head has-background-dark">
+          <p id="modal-titulo-evento" class="modal-card-title has-text-white">⚡ Detalle del Evento</p>
+          <button class="delete" aria-label="close" onclick="cerrarModal()"></button>
+        </header>
+        
+        <section class="modal-card-body has-background-black-bis has-text-white">
+          
+          <!-- Información General -->
+          <div class="box has-background-dark has-text-white mb-5">
+            <h4 class="title is-5 has-text-white">📌 Información General</h4>
+            <p><strong>Lugar:</strong> <span id="modal-lugar"></span></p>
+            <p><strong>Horario:</strong> <span id="modal-horario"></span></p>
+            <p><strong>Estado:</strong> <span id="modal-estado" class="tag is-info"></span></p>
+            <p class="mt-2"><strong>Descripción:</strong> <span id="modal-descripcion"></span></p>
+          </div>
+
+          <div class="columns">
+            
+            <!-- SECCIÓN 1: ARTISTAS ASIGNADOS -->
+            <div class="column is-half">
+              <div class="box has-background-dark">
+                <h4 class="title is-5 has-text-white">🎤 Artistas Asignados</h4>
+                
+                <div id="modal-lista-artistas" class="mb-4" style="max-height: 200px; overflow-y: auto;">
+                  <p class="has-text-grey">Cargando artistas...</p>
+                </div>
+
+                <form id="form-asignar-artista" onsubmit="event.preventDefault(); agregarArtistaAEvento();">
+                  <div class="field">
+                    <label class="label has-text-grey-light is-small">Seleccionar Artista:</label>
+                    <div class="control">
+                      <div class="select is-small is-fullwidth">
+                        <select id="modal-select-artista" required>
+                          <option value="">-- Elegir Artista --</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                  <button type="submit" class="button is-link is-small is-fullwidth mt-2">
+                    + Agregar Artista al Show
+                  </button>
+                </form>
+              </div>
+            </div>
+
+            <!-- SECCIÓN 2: RECURSOS ASIGNADOS -->
+            <div class="column is-half">
+              <div class="box has-background-dark">
+                <h4 class="title is-5 has-text-white">🛠️ Recursos / Equipos</h4>
+                
+                <div id="modal-lista-recursos" class="mb-4" style="max-height: 200px; overflow-y: auto;">
+                  <p class="has-text-grey">Cargando recursos...</p>
+                </div>
+
+                <form id="form-asignar-recurso" onsubmit="event.preventDefault(); agregarRecursoAEvento();">
+                  <div class="field">
+                    <label class="label has-text-grey-light is-small">Seleccionar Recurso:</label>
+                    <div class="control">
+                      <div class="select is-small is-fullwidth">
+                        <select id="modal-select-recurso" required>
+                          <option value="">-- Elegir Recurso --</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="field mb-2">
+                    <input class="input is-small" type="number" id="modal-cantidad-recurso" placeholder="Cantidad asignada" min="1" value="1" required>
+                  </div>
+                  <button type="submit" class="button is-success is-small is-fullwidth">
+                    + Agregar Recurso al Show
+                  </button>
+                </form>
+              </div>
+            </div>
+
+          </div>
+
+        </section>
+        
+        <footer class="modal-card-foot has-background-dark is-justify-content-end">
+          <button class="button" onclick="cerrarModal()">Cerrar</button>
+        </footer>
+
+      </div>
+    </div>
 
     <!-- PIE DE PÁGINA -->
     <footer class="footer has-background-black">
@@ -197,12 +331,12 @@
         </div>
     </footer>
 
-    <!-- SCRIPT DE INTERACTIVIDAD DE MENÚ MÓVIL -->
+    <!-- INTERACTIVIDAD DEL MENÚ NAVEGACIÓN MÓVIL -->
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const $navbarBurgers = Array.prototype.slice.call(document.querySelectorAll('.navbar-burger'), 0);
             if ($navbarBurgers.length > 0) {
-                $navbarBurgers.forEach( el => {
+                $navbarBurgers.forEach(el => {
                     el.addEventListener('click', () => {
                         const target = el.dataset.target;
                         const $target = document.getElementById(target);
@@ -214,7 +348,7 @@
         });
     </script>
 
-    <!-- VÍNCULO AL SCRIPT ESPECÍFICO DE ESTA PÁGINA -->
+    <!-- SCRIPT PRINCIPAL DE LÓGICA Y COMUNICACIÓN CON LA API -->
     <script src="js/eventos.js"></script>
 </body>
 </html>
