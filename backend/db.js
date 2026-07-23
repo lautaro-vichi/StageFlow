@@ -6,7 +6,8 @@ const pool = mysql.createPool({
     user: process.env.DB_USER || "root",
     password: process.env.DB_PASSWORD || "root",
     database: process.env.DB_NAME || "stage_flow",
-    ssl: process.env.DB_HOST ? { rejectUnauthorized: false } : false
+    ssl: process.env.DB_HOST ? { rejectUnauthorized: false } : false,
+    charset: "utf8mb4"
 });
 
 module.exports = pool;

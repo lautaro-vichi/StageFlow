@@ -1,7 +1,7 @@
 // =========================================================================
 // CONFIGURACIÓN GLOBAL DE LA API
 // =========================================================================
-const API_URL = "http://localhost:3000";
+const API_URL = "https://stageflow-backend-p2u1.onrender.com";
 
 let eventoSeleccionadoId = null;
 let eventoSeleccionadoEstado = "";

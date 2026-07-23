@@ -1,6 +1,11 @@
-DROP DATABASE IF EXISTS stage_flow;
-CREATE DATABASE stage_flow;
 USE stage_flow;
+
+-- Eliminar tablas existentes para permitir la re-ejecución limpia
+DROP TABLE IF EXISTS event_artist;
+DROP TABLE IF EXISTS event_resource;
+DROP TABLE IF EXISTS resources;
+DROP TABLE IF EXISTS artists;
+DROP TABLE IF EXISTS events;
 
 CREATE TABLE events (
     id INT PRIMARY KEY AUTO_INCREMENT,
@@ -15,67 +20,42 @@ CREATE TABLE events (
         'en curso',
         'finalizado',
         'cancelado'
-    )DEFAULT 'planificado',
+    ) DEFAULT 'planificado',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE artists (
-
     id INT AUTO_INCREMENT PRIMARY KEY,
-
     name VARCHAR(100) NOT NULL,
-
     genre VARCHAR(50)
-
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE resources (
-
     id INT AUTO_INCREMENT PRIMARY KEY,
-
     name VARCHAR(100) NOT NULL,
-
     type VARCHAR(50),
-
     total_quantity INT NOT NULL,
-
     available_quantity INT NOT NULL
-
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE event_resource (
     id INT AUTO_INCREMENT PRIMARY KEY,
-
     event_id INT NOT NULL,
-
     resource_id INT NOT NULL,
-
     quantity INT NOT NULL,
-
     FOREIGN KEY (event_id) REFERENCES events(id) ON DELETE CASCADE,
-
     FOREIGN KEY (resource_id) REFERENCES resources(id) ON DELETE CASCADE
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE event_artist (
-
     id INT AUTO_INCREMENT PRIMARY KEY,
-
     event_id INT NOT NULL,
-
     artist_id INT NOT NULL,
-
     start_time DATETIME,
-
     end_time DATETIME,
-
     FOREIGN KEY (event_id) REFERENCES events(id) ON DELETE CASCADE,
-
     FOREIGN KEY (artist_id) REFERENCES artists(id) ON DELETE CASCADE
-
-);
-
-
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 INSERT INTO events (name, description, start_time, end_time, location, status) VALUES
 ('Concierto de Rock', 'Un concierto de rock con bandas locales.', '2026-08-15 20:00:00', '2026-08-15 23:00:00', 'Auditorio Municipal', 'planificado'),
@@ -105,4 +85,3 @@ INSERT INTO resources (name, type, total_quantity, available_quantity) VALUES
 ('Tarimas modulares', 'Escenario', 25, 25),
 ('Trípodes', 'Soportes', 20, 20),
 ('Atriles', 'Accesorios', 15, 15);
-
