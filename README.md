@@ -1,50 +1,79 @@
 # 🎭 StageFlow
 
-**StageFlow** es una plataforma web diseñada para la gestión y organización de eventos y artistas.
+StageFlow es una aplicación web para la gestión de eventos, artistas y recursos técnicos. Permite administrar eventos evitando conflictos de horarios entre artistas y recursos.
 
 ---
 
-## 🛠️ Tecnologías utilizadas
+# 🛠️ Tecnologías utilizadas
 
-* **Backend:** Node.js, Express.js
-* **Base de Datos:** MySQL (Alojada en Aiven Cloud)
-* **Contenedores:** Docker
-* **Despliegue:** Render
-
----
-
-## 🌐 Servicios en Producción
-
-* **API Backend:** `https://stageflow-backend-p2u1.onrender.com`
+- Backend: Node.js + Express.js
+- Frontend: HTML, CSS y JavaScript
+- Base de datos: MySQL
+- Contenedores: Docker y Docker Compose
+- Despliegue: Render
 
 ---
 
-## 📁 Estructura del Proyecto
+# 📁 Estructura del proyecto
 
-```text
-StageFlow/
-├── backend/    # Servidor de Node.js, controladores, rutas y Dockerfile
-└── frontend/   # Interfaz de usuario (HTML, CSS, JS) y Nginx Dockerfile
+text
+Stage-Flow/
+│
+├── backend/
+│   ├── controllers/
+│   ├── routes/
+│   ├── config/
+│   ├── app.js
+│   ├── package.json
+│   └── Dockerfile
+│
+├── frontend/
+│   ├── css/
+│   ├── js/
+│   ├── pages/
+│   ├── index.html
+│   └── Dockerfile
+│
+├── database/
+│   └── dataBase.sql
+│
+├── docker-compose.yml
+└── README.md
 
-🚀 Ejecución en Entorno Local
-Requisitos previos
-Node.js (v20 o superior)
 
-MySQL o Docker instalados
+---
 
-Pasos para iniciar el Backend
-Clonar el repositorio:
+# 🚀 Cómo ejecutar el proyecto
 
-Bash
-git clone [https://github.com/OliveraFranco/Stage-Flow.git](https://github.com/OliveraFranco/Stage-Flow.git)
-cd Stage-Flow/backend
-Instalar dependencias:
+## Requisitos
 
-Bash
-npm install
-Iniciar el servidor:
+- Docker Desktop
+- Git
 
-Bash
-npm start
+## 1. Clonar el repositorio
 
-Fin.
+bash
+git clone https://github.com/OliveraFranco/Stage-Flow.git
+cd Stage-Flow
+
+
+## 2. Levantar los contenedores
+
+bash
+docker compose up --build
+
+
+Una vez iniciados:
+
+- Frontend: http://localhost:8080
+- Backend: http://localhost:3000
+
+---
+
+# 🌐 API desplegada
+
+Backend en Render:
+
+https://genuine-profiterole-fcab2e.netlify.app/eventos
+
+---
