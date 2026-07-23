@@ -53,7 +53,7 @@ Stage-Flow/
 ## 1. Clonar el repositorio
 
 bash
-git clone https://github.com/OliveraFranco/Stage-Flow.git
+git clone https://github.com/lautaro-vichi/StageFlow.git
 cd Stage-Flow
 
 
