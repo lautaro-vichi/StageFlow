@@ -26,7 +26,12 @@ CREATE TABLE artists (
     name VARCHAR(100) NOT NULL,
 
     genre VARCHAR(50)
+    
+    description VARCHAR(225),
 
+    age INT,
+
+    national BOOLEAN
 );
 
 CREATE TABLE resources (
@@ -34,6 +39,8 @@ CREATE TABLE resources (
     id INT AUTO_INCREMENT PRIMARY KEY,
 
     name VARCHAR(100) NOT NULL,
+
+    description VARCHAR(100),
 
     type VARCHAR(50),
 
@@ -51,6 +58,10 @@ CREATE TABLE event_resource (
     resource_id INT NOT NULL,
 
     quantity INT NOT NULL,
+
+    start_time DATETIME,
+
+    end_time DATETIME,
 
     FOREIGN KEY (event_id) REFERENCES events(id) ON DELETE CASCADE,
 
