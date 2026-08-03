@@ -65,6 +65,7 @@ async function postArtistEvent(req, res) {
         };
         i++;
       }
+      
       if(se_superpone === true){
         return res.status(400).json({
           mensaje: "El artista esta ocupado en este horario"

@@ -21,6 +21,7 @@ async function getEvents(req, res) {
     }
 
 }
+
 // obtiene un evento segun su id
 async function getEventById(req, res) {
     const id = Number(req.params.id); // convertimos el id a numero 
@@ -82,6 +83,7 @@ async function createEvent(req, res) {
             }
             i++;
         }
+        
         if(se_superpone === true){
             return res.status(400).json({
                 mensaje: "Ya existe un evento en esa ubicacion y horario"
@@ -128,6 +130,7 @@ async function updateEvent(req, res) {
                 mensaje: "Todos los campos son obligatorios"
             })
         }
+        
         // Si el evento pasa a finalizado, liberamos los recursos
         if (rows[0].status !== "finalizado" && status === "finalizado") {
 
