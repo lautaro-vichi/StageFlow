@@ -6,8 +6,6 @@ async  function getResources(req, res){
 
     res.json(rows);
 
-
-
     } catch(error){
         res.status(500).json({
             mensaje: "Error al obtener recursos"
