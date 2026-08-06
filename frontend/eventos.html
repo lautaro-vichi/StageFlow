@@ -4,7 +4,7 @@
     <link rel="shortcut icon" href="#">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestionar Eventos | StageFlow</title>
+    <title>Gestionar Producción | StageFlow</title>
     <meta name="description" content="Panel de administración de StageFlow. Controla escaletas, asignación de artistas y recursos técnicos en tiempo real.">
     
     <!-- Framework Bulma CSS -->
@@ -39,6 +39,13 @@
         }
         .border-bottom-dark {
             border-bottom: 1px solid #363636;
+        }
+        .scrollable-list {
+            max-height: 280px;
+            overflow-y: auto;
+        }
+        .checkbox-label {
+            color: #ffffff !important;
         }
     </style>
 </head>
@@ -76,22 +83,23 @@
         <div class="hero-body">
             <div class="container">
                 <h1 class="title is-3 has-text-white">Panel de Control de Escenario</h1>
-                <h2 class="subtitle is-6 has-text-grey-light">Administra la programación, asignación de artistas y requerimientos de equipamiento técnico.</h2>
+                <h2 class="subtitle is-6 has-text-grey-light">Administra eventos, artistas y el catálogo completo de equipamiento técnico.</h2>
             </div>
         </div>
     </section>
 
-    <!-- CONTENIDO PRINCIPAL EN COLUMNAS -->
+    <!-- CONTENIDO PRINCIPAL: GESTIÓN DE CATÁLOGOS (ARTISTAS Y RECURSOS) -->
     <main class="section">
         <div class="container">
             <div class="columns is-desktop">
                 
-                <!-- SECCIÓN IZQUIERDA: GESTIÓN RÁPIDA DE ARTISTAS -->
-                <div class="column is-one-third-desktop">
-                    <!-- Formulario para Registrar Artista -->
+                <!-- SECCIÓN 1: CRUD ARTISTAS -->
+                <div class="column is-half-desktop">
                     <div class="box">
-                        <h3 class="title is-4 has-text-centered mb-4">✨ Registrar Artista</h3>
+                        <h3 id="titulo-form-artista" class="title is-4 has-text-centered mb-4">✨ Agendar / Editar Artista</h3>
                         <form id="form-artista">
+                            <input type="hidden" id="artista-id" value="">
+
                             <div class="field">
                                 <label class="label">Nombre de la Banda / Artista:</label>
                                 <div class="control">
@@ -99,109 +107,104 @@
                                 </div>
                             </div>
 
-                            <div class="field">
-                                <label class="label">Género Musical:</label>
-                                <div class="control">
-                                    <input class="input" type="text" id="genero-artista" placeholder="Ej: Trap / Rock" required>
+                            <div class="columns">
+                                <div class="column">
+                                    <div class="field">
+                                        <label class="label">Género Musical:</label>
+                                        <div class="control">
+                                            <input class="input" type="text" id="genero-artista" placeholder="Ej: Trap / Rock" required>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
 
-                            <div class="field mt-4">
-                                <button type="submit" class="button is-link is-fullwidth has-text-weight-bold">
+                            <div class="field">
+                                <label class="label">Descripción / Rider Corto:</label>
+                                <div class="control">
+                                    <textarea class="textarea" id="descripcion-artista" placeholder="Breve descripción del artista..." rows="2"></textarea>
+                                </div>
+                            </div>
+
+                            <div class="field">
+                                <button type="submit" id="btn-guardar-artista" class="button is-link is-fullwidth has-text-weight-bold">
                                     GUARDAR ARTISTA
+                                </button>
+                                <button type="button" id="btn-cancelar-artista" class="button is-light is-fullwidth mt-2 is-hidden" onclick="cancelarEdicionArtista()">
+                                    Cancelar Edición
                                 </button>
                             </div>
                         </form>
                     </div>
 
-                    <!-- Lista de Artistas Disponibles -->
+                    <!-- Lista con CRUD de Artistas -->
                     <div class="box">
-                        <h3 class="subtitle is-5 has-text-weight-bold mb-3">🎵 Artistas Registrados</h3>
-                        <div id="lista-artistas" style="max-height: 250px; overflow-y: auto;">
+                        <h3 class="subtitle is-5 has-text-weight-bold mb-3">🎵 Catálogo de Artistas</h3>
+                        <div id="lista-artistas" class="scrollable-list">
                             <p class="has-text-grey-light is-italic">Cargando artistas...</p>
                         </div>
                     </div>
                 </div>
 
-                <!-- SECCIÓN DERECHA: CREAR / EDITAR EVENTO -->
-                <div class="column is-two-thirds-desktop">
+                <!-- SECCIÓN 2: CRUD RECURSOS / EQUIPOS -->
+                <div class="column is-half-desktop">
                     <div class="box">
-                        <h3 id="titulo-form-evento" class="title is-3 has-text-centered mb-4">🗓️ Agendar Nuevo Evento</h3>
-                        
-                        <form id="form-evento">
-                            <!-- Campo Oculto para ID durante Edición (PUT) -->
-                            <input type="hidden" id="evento-id" value="">
+                        <h3 id="titulo-form-recurso" class="title is-4 has-text-centered mb-4">🛠️ Registrar / Editar Recurso</h3>
+                        <form id="form-recurso">
+                            <input type="hidden" id="recurso-id" value="">
 
-                            <!-- Nombre del Evento -->
                             <div class="field">
-                                <label class="label">Nombre del Evento / Show:</label>
+                                <label class="label">Nombre del Recurso / Equipo:</label>
                                 <div class="control">
-                                    <input class="input" type="text" id="nombre" name="name" placeholder="Ej: Festival Rock Verano" required>
+                                    <input class="input" type="text" id="nombre-recurso" placeholder="Ej: Parlantes JBL EON" required>
                                 </div>
                             </div>
 
-                            <!-- Descripción -->
-                            <div class="field">
-                                <label class="label">Descripción:</label>
-                                <div class="control">
-                                    <textarea class="textarea" id="descripcion" name="description" placeholder="Detalles de la producción..." rows="2"></textarea>
-                                </div>
-                            </div>
-
-                            <!-- Lugar -->
-                            <div class="field">
-                                <label class="label">Lugar / Estadio / Escenario:</label>
-                                <div class="control">
-                                    <input class="input" type="text" id="lugar" name="location" placeholder="Ej: Estadio River Plate" required>
-                                </div>
-                            </div>
-
-                            <!-- Fechas e Inicio/Fin -->
                             <div class="columns">
                                 <div class="column">
                                     <div class="field">
-                                        <label class="label">Inicio (Fecha y Hora):</label>
+                                        <label class="label">Tipo de Recurso:</label>
                                         <div class="control">
-                                            <input class="input" type="datetime-local" id="start-time" name="start_time" required>
+                                            <input class="input" type="text" id="tipo-recurso" placeholder="Ej: Audio / Iluminación" required>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="column">
                                     <div class="field">
-                                        <label class="label">Fin (Fecha y Hora):</label>
+                                        <label class="label">Cantidad Total:</label>
                                         <div class="control">
-                                            <input class="input" type="datetime-local" id="end-time" name="end_time" required>
+                                            <input class="input" type="number" id="cantidad-recurso" placeholder="Ej: 20" min="1" required>
                                         </div>
                                     </div>
                                 </div>
                             </div>
 
-                            <!-- Estado del Evento -->
                             <div class="field">
-                                <label class="label">Estado:</label>
+                                <label class="label">Descripción / Especificaciones:</label>
                                 <div class="control">
-                                    <div class="select is-fullwidth">
-                                        <select id="estado" name="status">
-                                            <option value="planificado">📅 Planificado</option>
-                                            <option value="confirmado">✅ Confirmado</option>
-                                            <option value="en curso">🎙️ En Curso</option>
-                                            <option value="finalizado">🏁 Finalizado</option>
-                                            <option value="cancelado">❌ Cancelado</option>
-                                        </select>
-                                    </div>
+                                    <textarea class="textarea" id="descripcion-recurso" placeholder="Detalles técnicos del equipo..." rows="2"></textarea>
                                 </div>
                             </div>
 
-                            <!-- Botones -->
-                            <div class="field mt-5">
-                                <button type="submit" id="btn-guardar-evento" class="button is-primary is-fullwidth has-text-weight-bold">
-                                    GUARDAR EVENTO
+                            <div class="field mt-4">
+                                <button type="submit" id="btn-guardar-recurso" class="button is-success is-fullwidth has-text-weight-bold">
+                                    GUARDAR RECURSO
                                 </button>
-                                <button type="button" id="btn-cancelar-edicion" class="button is-light is-fullwidth mt-2 is-hidden" onclick="cancelarEdicion()">
+                                <button type="button" id="btn-cancelar-recurso" class="button is-light is-fullwidth mt-2 is-hidden" onclick="cancelarEdicionRecurso()">
                                     Cancelar Edición
                                 </button>
                             </div>
                         </form>
+
+
+                        
+                    </div>
+
+                    <!-- Lista con CRUD de Recursos -->
+                    <div class="box">
+                        <h3 class="subtitle is-5 has-text-weight-bold mb-3">📦 Inventario de Recursos</h3>
+                        <div id="lista-recursos" class="scrollable-list">
+                            <p class="has-text-grey-light is-italic">Cargando recursos...</p>
+                        </div>
                     </div>
                 </div>
 
@@ -209,9 +212,84 @@
         </div>
     </main>
 
-    <!-- SECCIÓN CRONOGRAMA Y FILTROS -->
+    <!-- SECCIÓN DE CREACIÓN DE EVENTOS Y CRONOGRAMA -->
     <section class="section pt-0">
         <div class="container">
+            
+            <!-- FORMULARIO DE EVENTO -->
+            <div class="box mb-6">
+                <h3 id="titulo-form-evento" class="title is-3 has-text-centered mb-4">🗓️ Agendar Nuevo Evento</h3>
+                
+                <form id="form-evento">
+                    <input type="hidden" id="evento-id" value="">
+
+                    <div class="field">
+                        <label class="label">Nombre del Evento / Show:</label>
+                        <div class="control">
+                            <input class="input" type="text" id="nombre" name="name" placeholder="Ej: Festival Rock Verano" required>
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <label class="label">Descripción:</label>
+                        <div class="control">
+                            <textarea class="textarea" id="descripcion" name="description" placeholder="Detalles de la producción..." rows="2"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <label class="label">Lugar / Estadio / Escenario:</label>
+                        <div class="control">
+                            <input class="input" type="text" id="lugar" name="location" placeholder="Ej: Estadio River Plate" required>
+                        </div>
+                    </div>
+
+                    <div class="columns">
+                        <div class="column">
+                            <div class="field">
+                                <label class="label">Inicio (Fecha y Hora):</label>
+                                <div class="control">
+                                    <input class="input" type="datetime-local" id="start-time" name="start_time" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="column">
+                            <div class="field">
+                                <label class="label">Fin (Fecha y Hora):</label>
+                                <div class="control">
+                                    <input class="input" type="datetime-local" id="end-time" name="end_time" required>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <label class="label">Estado:</label>
+                        <div class="control">
+                            <div class="select is-fullwidth">
+                                <select id="estado" name="status">
+                                    <option value="planificado">📅 Planificado</option>
+                                    <option value="confirmado">✅ Confirmado</option>
+                                    <option value="en curso">🎙️ En Curso</option>
+                                    <option value="finalizado">🏁 Finalizado</option>
+                                    <option value="cancelado">❌ Cancelado</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="field mt-5">
+                        <button type="submit" id="btn-guardar-evento" class="button is-primary is-fullwidth has-text-weight-bold">
+                            GUARDAR EVENTO
+                        </button>
+                        <button type="button" id="btn-cancelar-edicion" class="button is-light is-fullwidth mt-2 is-hidden" onclick="cancelarEdicion()">
+                            Cancelar Edición
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- CRONOGRAMA -->
             <div class="level mb-5">
                 <div class="level-left">
                     <div class="level-item">
@@ -220,9 +298,8 @@
                 </div>
             </div>
 
-            <!-- Contenedor dinámico controlado por eventos.js -->
             <div id="contenedor-eventos" class="columns is-multiline">
-                <!-- Las tarjetas se inyectan dinámicamente -->
+                <!-- Tarjetas inyectadas dinámicamente -->
             </div>
 
             <div id="mensaje-vacio" class="notification is-dark has-text-centered is-hidden" style="border: 1px dashed #4a4a4a;">
@@ -242,8 +319,6 @@
         </header>
         
         <section class="modal-card-body has-background-black-bis has-text-white">
-          
-          <!-- Información General -->
           <div class="box has-background-dark has-text-white mb-5">
             <h4 class="title is-5 has-text-white">📌 Información General</h4>
             <p><strong>Lugar:</strong> <span id="modal-lugar"></span></p>
@@ -253,8 +328,7 @@
           </div>
 
           <div class="columns">
-            
-            <!-- SECCIÓN 1: ARTISTAS ASIGNADOS -->
+            <!-- ARTISTAS ASIGNADOS -->
             <div class="column is-half">
               <div class="box has-background-dark">
                 <h4 class="title is-5 has-text-white">🎤 Artistas Asignados</h4>
@@ -281,7 +355,7 @@
               </div>
             </div>
 
-            <!-- SECCIÓN 2: RECURSOS ASIGNADOS -->
+            <!-- RECURSOS ASIGNADOS -->
             <div class="column is-half">
               <div class="box has-background-dark">
                 <h4 class="title is-5 has-text-white">🛠️ Recursos / Equipos</h4>
@@ -312,7 +386,6 @@
             </div>
 
           </div>
-
         </section>
         
         <footer class="modal-card-foot has-background-dark is-justify-content-end">
@@ -348,7 +421,7 @@
         });
     </script>
 
-    <!-- SCRIPT PRINCIPAL DE LÓGICA Y COMUNICACIÓN CON LA API -->
+    <!-- SCRIPT PRINCIPAL DE LÓGICA -->
     <script src="js/eventos.js"></script>
 </body>
 </html>
