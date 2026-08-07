@@ -6,6 +6,8 @@ async function getEvents(req, res) {
 
     try {
 
+        await actualizarEstadosEventos();
+
         const [rows] = await pool.query("SELECT * FROM events");
 
         res.json(rows);
@@ -28,6 +30,8 @@ async function getEventById(req, res) {
 
     try {
 
+        await actualizarEstadosEventos();
+
         const [rows] = await pool.query("SELECT * FROM events WHERE id = ?", [id]);
 
         if (rows.length === 0 ) {
@@ -47,132 +51,195 @@ async function getEventById(req, res) {
     }
 
 } 
-// controlador para crear un evento
+
+//controlador para crear evento
 async function createEvent(req, res) {
-    
 
     try {
-       const {name, description, start_time, end_time, location, status} = req.body;
-       //validamos que los datos existen
-        if(!name || !description || !start_time || !end_time || !location || !status){
+
+        const { name, description, start_time, end_time, location } = req.body;
+
+        if (!name || !description || !start_time || !end_time || !location) {
             return res.status(400).json({
                 mensaje: "Todos los campos son obligatorios"
             });
         }
 
-        if(new Date(end_time) <= new Date(start_time)){
+        if (new Date(end_time) <= new Date(start_time)) {
             return res.status(400).json({
                 mensaje: "La hora de fin no puede ser menor a la hora de comienzo"
             });
         }
 
-        //buscamos que no hayan 2 eventos en el mismo lugar a la misma hora
-        const [events] = await pool.query("SELECT * FROM events WHERE location = ?", [location]);
-        let i = 0;
-        let se_superpone = false;
+        const [events] = await pool.query(
+            "SELECT * FROM events WHERE location = ?",
+            [location]
+        );
 
-        while( i < events.length && !se_superpone ){
-            const inicioExistente = new Date(events[i].start_time);
-            const finExistente = new Date(events[i].end_time);
+        for (const event of events) {
+
+            const inicioExistente = new Date(event.start_time);
+            const finExistente = new Date(event.end_time);
 
             const inicioNuevo = new Date(start_time);
             const finNuevo = new Date(end_time);
 
-            if(finExistente > inicioNuevo && inicioExistente < finNuevo){
-                se_superpone = true;
+            if (finExistente > inicioNuevo && inicioExistente < finNuevo) {
+                return res.status(400).json({
+                    mensaje: "Ya existe un evento en esa ubicación y horario"
+                });
             }
-            i++;
         }
-        
-        if(se_superpone === true){
-            return res.status(400).json({
-                mensaje: "Ya existe un evento en esa ubicacion y horario"
-            });
-        }
-    
-        //insertamos el evento en la base de datos
-        const [result] = await pool.query("INSERT INTO events (name, description, start_time, end_time, location, status) VALUES (?, ?, ?, ?, ?, ?)", [name, description, start_time, end_time, location, status]);
+
+        const [result] = await pool.query(
+            `INSERT INTO events
+            (name, description, start_time, end_time, location, status)
+            VALUES (?, ?, ?, ?, ?, ?)`,
+            [name, description, start_time, end_time, location, "planificado"]
+        );
+
         res.status(201).json({
             mensaje: "Evento creado correctamente",
             id: result.insertId
         });
+
     } catch (error) {
+
         console.error(error);
+
         res.status(500).json({
             mensaje: "Error al crear evento"
         });
-        }
-    }
 
+    }
+}
 //controlador para actualizar un evento
 async function updateEvent(req, res) {
+
     const id = Number(req.params.id);
-    const {name, description, start_time, end_time, location, status} = req.body;
+
+    const {
+        name,
+        description,
+        start_time,
+        end_time,
+        location,
+        status
+    } = req.body;
 
     try {
-        const [rows] = await pool.query("SELECT * FROM events WHERE id = ?", [id]);
 
-        //existe evento?
+        const [rows] = await pool.query(
+            "SELECT * FROM events WHERE id = ?",
+            [id]
+        );
+
         if (rows.length === 0) {
             return res.status(404).json({
                 mensaje: "Evento no encontrado"
             });
         }
-        //esta finalizado?
-        if(rows[0].status === "finalizado"){
-          return res.status(400).json({
-            mensaje: "El evento ya ha finalizado"
-          });
-        }   
 
-        if(!name || !description || !start_time || !end_time || !location || !status){
+        if (
+            rows[0].status === "finalizado" ||
+            rows[0].status === "cancelado"
+        ) {
+            return res.status(400).json({
+                mensaje: "El evento ya no puede modificarse"
+            });
+        }
+
+        if (!name || !description || !start_time || !end_time || !location) {
             return res.status(400).json({
                 mensaje: "Todos los campos son obligatorios"
-            })
+            });
         }
-        
-        // Si el evento pasa a finalizado, liberamos los recursos
-        if (rows[0].status !== "finalizado" && status === "finalizado") {
 
-            const [resources] = await pool.query(
-         "SELECT resource_id, quantity FROM event_resource WHERE event_id = ?",
-            [id]
-         );
+        if (new Date(end_time) <= new Date(start_time)) {
+            return res.status(400).json({
+                mensaje: "La hora de fin no puede ser menor a la hora de comienzo"
+            });
+        }
 
-            let i = 0;
+        const [events] = await pool.query(
+            "SELECT * FROM events WHERE location = ? AND id <> ?",
+            [location, id]
+        );
 
-            while (i < resources.length) {
+        for (const event of events) {
 
-              await pool.query(
-                 `UPDATE resources
-                    SET available_quantity = available_quantity + ?
-                 WHERE id = ?`,
-                 [resources[i].quantity, resources[i].resource_id]
-                );
+            const inicioExistente = new Date(event.start_time);
+            const finExistente = new Date(event.end_time);
 
-                i++;
+            const inicioNuevo = new Date(start_time);
+            const finNuevo = new Date(end_time);
+
+            if (finExistente > inicioNuevo && inicioExistente < finNuevo) {
+                return res.status(400).json({
+                    mensaje: "Ya existe un evento en esa ubicación y horario"
+                });
             }
         }
 
-        await pool.query("UPDATE events SET name = ?, description = ?, start_time = ?, end_time = ?, location = ?, status = ? WHERE id = ?", [name, description, start_time, end_time, location, status, id]);
+        let nuevoEstado = rows[0].status;
 
-        res.json({
-        mensaje: "Evento actualizado correctamente"
+        // ¿El usuario intentó cambiar el estado?
+        if (status && status !== rows[0].status) {
+
+            if (status === "cancelado") {
+                nuevoEstado = "cancelado";
+            } else {
+                return res.status(400).json({
+                    mensaje: "El estado solo puede modificarse a cancelado"
+                });
+            }
+        }
+        await pool.query(
+            `UPDATE events
+             SET name = ?,
+                 description = ?,
+                 start_time = ?,
+                 end_time = ?,
+                 location = ?,
+                 status = ?
+             WHERE id = ?`,
+            [
+                name,
+                description,
+                start_time,
+                end_time,
+                location,
+                nuevoEstado,
+                id
+            ]
+        );
+
+        res.status(200).json({
+            mensaje: "Evento actualizado correctamente"
         });
+
     } catch (error) {
+
         console.error(error);
+
         res.status(500).json({
             mensaje: "Error al actualizar evento"
         });
+
     }
 }
 
 // controlador para eliminar un evento
 async function deleteEvent(req, res) {
+
     const id = Number(req.params.id);
 
     try {
-        const [rows] = await pool.query("SELECT * FROM events WHERE id = ?", [id]);
+
+        const [rows] = await pool.query(
+            "SELECT * FROM events WHERE id = ?",
+            [id]
+        );
 
         if (rows.length === 0) {
             return res.status(404).json({
@@ -180,23 +247,60 @@ async function deleteEvent(req, res) {
             });
         }
 
-      //esta finalizado?
-      if(rows[0].status === "finalizado"){
-        return res.status(400).json({
-          mensaje: "El evento ya ha finalizado"
-        });
-      }           
+        if (
+            rows[0].status === "finalizado" ||
+            rows[0].status === "cancelado"
+        ) {
+            return res.status(400).json({
+                mensaje: "El evento ya no puede eliminarse"
+            });
+        }
 
-        await pool.query("DELETE FROM events WHERE id = ?", [id]);
-        
-        res.json({
+        await pool.query(
+            "DELETE FROM events WHERE id = ?",
+            [id]
+        );
+
+        res.status(200).json({
             mensaje: "Evento eliminado correctamente"
         });
+
     } catch (error) {
+
         console.error(error);
+
         res.status(500).json({
             mensaje: "Error al eliminar evento"
         });
+
+    }
+}
+async function actualizarEstadosEventos() {
+
+    const ahora = new Date();
+
+    const [eventos] = await pool.query("SELECT * FROM events");
+
+    for (const evento of eventos) {
+
+        if (evento.status === "cancelado")
+            continue;
+
+        let nuevoEstado;
+
+        if (ahora < evento.start_time)
+            nuevoEstado = "planificado";
+        else if (ahora <= evento.end_time)
+            nuevoEstado = "en curso";
+        else
+            nuevoEstado = "finalizado";
+
+        if (nuevoEstado !== evento.status) {
+            await pool.query(
+                "UPDATE events SET status = ? WHERE id = ?",
+                [nuevoEstado, evento.id]
+            );
+        }
     }
 }
 
