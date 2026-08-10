@@ -1,9 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <!-- ============================================== -->
-    <!-- 1. HEAD Y METADATOS                            -->
-    <!-- ============================================== -->
+    <!-- HEAD Y METADATOS -->
     <link rel="shortcut icon" href="#">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -22,9 +20,7 @@
 </head>
 <body>
 
-    <!-- ============================================== -->
-    <!-- 2. NAVBAR / MENÚ DE NAVEGACIÓN                 -->
-    <!-- ============================================== -->
+    <!-- NAVBAR / BARRA DE NAVEGACIÓN -->
     <header>
         <nav class="navbar is-black">
             <div class="container">
@@ -45,9 +41,7 @@
         </nav>
     </header>
 
-    <!-- ============================================== -->
-    <!-- 3. HERO (TÍTULO DE SECCIÓN)                    -->
-    <!-- ============================================== -->
+    <!-- TITULOS -->
     <section class="hero is-dark is-small">
         <div class="hero-body container">
             <h1 class="title is-3 has-text-white">Panel de Control de Escenario</h1>
@@ -55,14 +49,12 @@
         </div>
     </section>
 
-    <!-- ============================================== -->
-    <!-- 4. PANELES DE CATÁLOGOS (ARTISTAS Y RECURSOS)  -->
-    <!-- ============================================== -->
+    <!-- FORMULARIOS  -->
     <main class="section">
         <div class="container">
             <div class="columns is-desktop">
                 
-                <!-- 4A. COLUMNA ARTISTAS -->
+                <!-- COLUMNA ARTISTAS -->
                 <div class="column is-half-desktop">
                     
                     <!-- Formulario de Artistas -->
@@ -112,39 +104,54 @@
                     </div>
                 </div>
 
-                <!-- 4B. COLUMNA RECURSOS TÉCNICOS -->
+                <!-- COLUMNA RECURSOS TÉCNICOS -->
                 <div class="column is-half-desktop">
                     
-<!-- Formulario de Recursos -->
-<div class="box">
-    <h3 id="titulo-form-recurso" class="title is-4 has-text-centered mb-4">🛠️ Registrar / Editar Recurso</h3>
-    <form id="form-recurso">
-        <input type="hidden" id="recurso-id" value="">
-        <div class="field">
-            <label class="label">Nombre del Recurso / Equipo:</label>
-            <input class="input" type="text" id="nombre-recurso" placeholder="Ej: Parlantes JBL EON" required>
-        </div>
-        <div class="field">
-            <label class="label">Tipo de Recurso:</label>
-            <input class="input" type="text" id="tipo-recurso" placeholder="Ej: Audio / Iluminación" required>
-        </div>
-        
-        <!-- Campo Visible ÚNICAMENTE en Modo Edición -->
-        <div class="field is-hidden" id="campo-cantidad-disponible">
-            <label class="label">Cantidad Disponible:</label>
-            <input class="input" type="number" id="cantidad-disponible-recurso" placeholder="Ej: 15" min="0">
-        </div>
+                    <!-- Formulario de Recursos -->
+                    <div class="box">
+                        <h3 id="titulo-form-recurso" class="title is-4 has-text-centered mb-4">🛠️ Registrar / Editar Recurso</h3>
+                        <form id="form-recurso">
+                            <input type="hidden" id="recurso-id" value="">
+                            <div class="field">
+                                <label class="label">Nombre del Recurso / Equipo:</label>
+                                <input class="input" type="text" id="nombre-recurso" placeholder="Ej: Parlantes JBL EON" required>
+                            </div>
+                            <div class="field">
+                                <label class="label">Tipo de Recurso:</label>
+                                <input class="input" type="text" id="tipo-recurso" placeholder="Ej: Audio / Iluminación" required>
+                            </div>
+                            
+                            <!-- Campo Visible ÚNICAMENTE en Modo Edición -->
+                            <div id="campo-cantidad-total" class="field is-hidden">
+                                <label class="label">Cantidad Total:</label>
+                                <div class="control">
+                                    <input class="input" type="number" id="cantidad-total-recurso" min="0" placeholder="Ej: 10">
+                                </div>
+                            </div>
 
-        <div class="field">
-            <label class="label">Descripción / Especificaciones:</label>
-            <textarea class="textarea" id="descripcion-recurso" placeholder="Detalles técnicos del equipo..." rows="2" required></textarea>
-        </div>
-        <div class="field mt-4">
-            <button type="submit" id="btn-guardar-recurso" class="button is-success is-fullwidth has-text-weight-bold">GUARDAR RECURSO</button>
-            <button type="button" id="btn-cancelar-recurso" class="button is-light is-fullwidth mt-2 is-hidden" onclick="cancelarEdicionRecurso()">Cancelar Edición</button>
-        </div>
-    </form>
-</div>
+                            <div id="campo-cantidad-disponible" class="field is-hidden">
+                                <label class="label">Cantidad Disponible:</label>
+                                <div class="control">
+                                    <input class="input" type="number" id="cantidad-disponible-recurso" min="0" placeholder="Ej: 8">
+                                </div>
+                            </div>
+
+                            <div class="field">
+                                <label class="label">Descripción / Especificaciones:</label>
+                                <textarea class="textarea" id="descripcion-recurso" placeholder="Detalles técnicos del equipo..." rows="2" required></textarea>
+                            </div>
+
+                            <!-- CARTEL DE ERROR DE BLOQUEO DE STOCK -->
+                            <div id="mensaje-error-recurso" class="notification is-danger is-light py-2 px-3 mb-3 is-hidden">
+                                ⚠️ La cantidad disponible no puede superar a la cantidad total.
+                            </div>
+
+                            <div class="field mt-4">
+                                <button type="submit" id="btn-guardar-recurso" class="button is-success is-fullwidth has-text-weight-bold">GUARDAR RECURSO</button>
+                                <button type="button" id="btn-cancelar-recurso" class="button is-light is-fullwidth mt-2 is-hidden" onclick="cancelarEdicionRecurso()">Cancelar Edición</button>
+                            </div>
+                        </form>
+                    </div>
 
                     <!-- Lista de Recursos -->
                     <div class="box">
@@ -159,63 +166,61 @@
         </div>
     </main>
 
-    <!-- ============================================== -->
-    <!-- 5. SECCIÓN DE EVENTOS (FORMULARIO Y LISTADO)   -->
-    <!-- ============================================== -->
+    <!-- SECCIÓN DE EVENTOS (FORMULARIO Y LISTADO)   -->
     <section class="section pt-0">
         <div class="container">
             
-<!-- Formulario Crear/Editar Evento -->
-<div class="box mb-6">
-    <h3 id="titulo-form-evento" class="title is-3 has-text-centered mb-4">🗓️ Agendar Nuevo Evento</h3>
-    <form id="form-evento">
-        <input type="hidden" id="evento-id" value="">
-        <div class="field">
-            <label class="label">Nombre del Evento / Show:</label>
-            <input class="input" type="text" id="nombre" name="name" placeholder="Ej: Festival Rock Verano" required>
-        </div>
-        <div class="field">
-            <label class="label">Descripción:</label>
-            <textarea class="textarea" id="descripcion" name="description" placeholder="Detalles de la producción..." rows="2" required></textarea>
-        </div>
-        <div class="field">
-            <label class="label">Lugar / Estadio / Escenario:</label>
-            <input class="input" type="text" id="lugar" name="location" placeholder="Ej: Estadio River Plate" required>
-        </div>
-        <div class="columns">
-            <div class="column">
-                <div class="field">
-                    <label class="label">Inicio (Fecha y Hora):</label>
-                    <input class="input" type="datetime-local" id="start-time" name="start_time" required>
-                </div>
-            </div>
-            <div class="column">
-                <div class="field">
-                    <label class="label">Fin (Fecha y Hora):</label>
-                    <input class="input" type="datetime-local" id="end-time" name="end_time" required>
-                </div>
-            </div>
-        </div>
+            <!-- Formulario Crear/Editar Evento -->
+            <div class="box mb-6">
+                <h3 id="titulo-form-evento" class="title is-3 has-text-centered mb-4">🗓️ Agendar Nuevo Evento</h3>
+                <form id="form-evento">
+                    <input type="hidden" id="evento-id" value="">
+                    <div class="field">
+                        <label class="label">Nombre del Evento / Show:</label>
+                        <input class="input" type="text" id="nombre" name="name" placeholder="Ej: Festival Rock Verano" required>
+                    </div>
+                    <div class="field">
+                        <label class="label">Descripción:</label>
+                        <textarea class="textarea" id="descripcion" name="description" placeholder="Detalles de la producción..." rows="2" required></textarea>
+                    </div>
+                    <div class="field">
+                        <label class="label">Lugar / Estadio / Escenario:</label>
+                        <input class="input" type="text" id="lugar" name="location" placeholder="Ej: Estadio River Plate" required>
+                    </div>
+                    <div class="columns">
+                        <div class="column">
+                            <div class="field">
+                                <label class="label">Inicio (Fecha y Hora):</label>
+                                <input class="input" type="datetime-local" id="start-time" name="start_time" required>
+                            </div>
+                        </div>
+                        <div class="column">
+                            <div class="field">
+                                <label class="label">Fin (Fecha y Hora):</label>
+                                <input class="input" type="datetime-local" id="end-time" name="end_time" required>
+                            </div>
+                        </div>
+                    </div>
 
-        <!-- El selector de Estado permanece oculto al crear y se muestra solo al editar -->
-        <div class="field is-hidden" id="campo-estado-evento">
-            <label class="label">Estado del Evento:</label>
-            <div class="select is-fullwidth">
-                <select id="estado" name="status">
-                    <option value="planificado">📅 Planificado</option>
-                    <option value="cancelado">❌ Cancelado</option>
-                </select>
+                    <!-- El selector de Estado permanece oculto al crear y se muestra solo al editar -->
+                    <div class="field is-hidden" id="campo-estado-evento">
+                        <label class="label">Estado del Evento:</label>
+                        <div class="select is-fullwidth">
+                            <select id="estado" name="status">
+                                <option value="planificado">📅 Planificado</option>
+                                <option value="cancelado">❌ Cancelado</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="field mt-5">
+                        <button type="submit" id="btn-guardar-evento" class="button is-primary is-fullwidth has-text-weight-bold">GUARDAR EVENTO</button>
+                        <button type="button" id="btn-cancelar-edicion" class="button is-light is-fullwidth mt-2 is-hidden" onclick="cancelarEdicion()">Cancelar Edición</button>
+                    </div>
+                </form>
             </div>
-        </div>
 
-        <div class="field mt-5">
-            <button type="submit" id="btn-guardar-evento" class="button is-primary is-fullwidth has-text-weight-bold">GUARDAR EVENTO</button>
-            <button type="button" id="btn-cancelar-edicion" class="button is-light is-fullwidth mt-2 is-hidden" onclick="cancelarEdicion()">Cancelar Edición</button>
-        </div>
-    </form>
-</div>
-
-            <!-- 5B. Grilla de Eventos (Cronograma) -->
+            <!-- CRONOGRAM ADE EVENTOS -->
             <h3 class="title is-4 has-text-white mb-5">📋 Cronograma de Eventos Reservados</h3>
             <div id="contenedor-eventos" class="columns is-multiline"></div>
             <div id="mensaje-vacio" class="notification is-dark has-text-centered is-hidden" style="border: 1px dashed #4a4a4a;">
@@ -224,9 +229,7 @@
         </div>
     </section>
 
-    <!-- ============================================== -->
-    <!-- 6. MODAL: DETALLES Y ASIGNACIONES DEL EVENTO   -->
-    <!-- ============================================== -->
+    <!-- MODAL: DETALLES Y ASIGNACIONES DEL EVENTO   -->
     <div id="modal-detalle" class="modal">
       <div class="modal-background" onclick="cerrarModal()"></div>
       <div class="modal-card" style="width: 80%; max-width: 900px;">
@@ -305,18 +308,14 @@
       </div>
     </div>
 
-    <!-- ============================================== -->
-    <!-- 7. FOOTER                                      -->
-    <!-- ============================================== -->
+    <!-- FOOTER -->
     <footer class="footer has-background-black">
         <div class="content has-text-centered has-text-grey-light">
             <p><strong class="has-text-white">StageFlow</strong> &copy; 2026 - Herramienta de Gestión para Producciones Artísticas.</p>
         </div>
     </footer>
 
-    <!-- ============================================== -->
-    <!-- 8. SCRIPTS (Navegación Móvil y Lógica)         -->
-    <!-- ============================================== -->
+    <!-- SCRIPTS (Navegación Móvil y Lógica) -->
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const $navbarBurgers = Array.prototype.slice.call(document.querySelectorAll('.navbar-burger'), 0);
