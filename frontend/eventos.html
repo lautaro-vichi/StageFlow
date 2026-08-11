@@ -110,51 +110,67 @@
                     <!-- Formulario de Recursos -->
                     <div class="box">
                         <h3 id="titulo-form-recurso" class="title is-4 has-text-centered mb-4">🛠️ Registrar / Editar Recurso</h3>
-                        <form id="form-recurso">
-                            <input type="hidden" id="recurso-id" value="">
-                            <div class="field">
-                                <label class="label">Nombre del Recurso / Equipo:</label>
-                                <input class="input" type="text" id="nombre-recurso" placeholder="Ej: Parlantes JBL EON" required>
-                            </div>
-                            <div class="field">
-                                <label class="label">Tipo de Recurso:</label>
-                                <input class="input" type="text" id="tipo-recurso" placeholder="Ej: Audio / Iluminación" required>
-                            </div>
-                            
-                            <!-- Campo Visible ÚNICAMENTE en Modo Edición -->
-                            <div id="campo-cantidad-total" class="field is-hidden">
-                                <label class="label">Cantidad Total:</label>
-                                <div class="control">
-                                    <input class="input" type="number" id="cantidad-total-recurso" min="0" placeholder="Ej: 10">
-                                </div>
-                            </div>
+                        <form id="form-recurso" onsubmit="guardarRecurso(event)" class="mb-5"> 
+    <input type="hidden" id="recurso-id">
 
-                            <div id="campo-cantidad-disponible" class="field is-hidden">
-                                <label class="label">Cantidad Disponible:</label>
-                                <div class="control">
-                                    <input class="input" type="number" id="cantidad-disponible-recurso" min="0" placeholder="Ej: 8">
-                                </div>
-                            </div>
 
-                            <div class="field">
-                                <label class="label">Descripción / Especificaciones:</label>
-                                <textarea class="textarea" id="descripcion-recurso" placeholder="Detalles técnicos del equipo..." rows="2" required></textarea>
-                            </div>
+    <div class="dark">
+    <!-- Un solo título principal -->
 
-                            <!-- CARTEL DE ERROR DE BLOQUEO DE STOCK -->
-                            <div id="mensaje-error-recurso" class="notification is-danger is-light py-2 px-3 mb-3 is-hidden">
-                                ⚠️ La cantidad disponible no puede superar a la cantidad total.
-                            </div>
+    <form id="form-recurso" onsubmit="guardarRecurso(event)">
+        <input type="hidden" id="recurso-id">
 
-                            <div class="field mt-4">
-                                <button type="submit" id="btn-guardar-recurso" class="button is-success is-fullwidth has-text-weight-bold">GUARDAR RECURSO</button>
-                                <button type="button" id="btn-cancelar-recurso" class="button is-light is-fullwidth mt-2 is-hidden" onclick="cancelarEdicionRecurso()">Cancelar Edición</button>
-                            </div>
-                        </form>
-                    </div>
+        <!-- 1. Nombre -->
+        <div class="field mb-3">
+            <label class="label has-text-white">Nombre del Recurso / Equipo:</label>
+            <div class="control">
+                <input class="input" type="text" id="nombre-recurso" placeholder="Ej: Parlantes JBL EON" required>
+            </div>
+        </div>
+
+        <!-- 2. Tipo -->
+        <div class="field mb-3">
+            <label class="label has-text-white">Tipo de Recurso:</label>
+            <div class="control">
+                <input class="input" type="text" id="tipo-recurso" placeholder="Ej: Audio / Iluminación" required>
+            </div>
+        </div>
+
+        <!-- Campo oculto para edición avanzada -->
+        <div class="field mb-3 is-hidden" id="campo-cantidad-total">
+            <label class="label has-text-white">Cantidad Total:</label>
+            <div class="control">
+                <input class="input" type="number" id="cantidad-total-recurso" min="0">
+            </div>
+        </div>
+
+        <!-- 3. Cantidad -->
+        <div class="field mb-3" id="campo-cantidad-disponible">
+            <label class="label has-text-white">Cantidad disponible:</label>
+            <div class="control">
+                <input class="input" type="number" id="cantidad-disponible-recurso" placeholder="Ej: 10" min="1" value="1" oninput="validarStockRecurso()" required>
+            </div>
+            <p id="mensaje-error-recurso" class="help is-danger is-hidden">Ingrese una cantidad válida.</p>
+        </div>
+
+        <!-- 4. Descripción -->
+        <div class="field mb-4">
+            <label class="label has-text-white">Descripción / Especificaciones:</label>
+            <div class="control">
+                <textarea class="textarea" id="descripcion-recurso" rows="2" placeholder="Detalles técnicos del equipo..."></textarea>
+            </div>
+        </div>
+
+        <!-- Botones -->
+        <div class="field mb-5">
+            <button type="submit" id="btn-guardar-recurso" class="button is-success is-fullwidth">GUARDAR RECURSO</button>
+            <button type="button" id="btn-cancelar-recurso" class="button is-light is-fullwidth mt-2 is-hidden" onclick="cancelarEdicionRecurso()">Cancelar</button>
+        </div>
+    </form>
+</div>
 
                     <!-- Lista de Recursos -->
-                    <div class="box">
+                    <div class="box" mt-5>
                         <h3 class="subtitle is-5 has-text-weight-bold mb-3">📦 Inventario de Recursos</h3>
                         <div id="lista-recursos" class="scrollable-list">
                             <p class="has-text-grey-light is-italic">Cargando recursos...</p>

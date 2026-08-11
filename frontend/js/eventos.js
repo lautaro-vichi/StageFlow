@@ -198,13 +198,23 @@ async function eliminarArtista(id) {
 
 // Valida que la cantidad disponible no sea mayor a la cantidad total ni negativa
 function validarStockRecurso() {
-    const inpT = getEl("cantidad-total-recurso"), inpD = getEl("cantidad-disponible-recurso");
-    if (!inpT || !inpD) return true;
-    const vT = Number(inpT.value), vD = Number(inpD.value);
-    const invalido = isNaN(vT) || isNaN(vD) || vT < 0 || vD < 0 || vD > vT;
+    const inpT = getEl("cantidad-total-recurso");
+    const inpD = getEl("cantidad-disponible-recurso");
+    if (!inpD) return true;
+
+    const vD = Number(inpD.value);
+    
+    // Si la cantidad total está oculta o vacía (creando nuevo recurso), se toma igual a la disponible
+    const totalVisible = inpT && !inpT.closest('.field')?.classList.contains('is-hidden') && inpT.value !== "";
+    const vT = totalVisible ? Number(inpT.value) : vD;
+
+    // Es inválido si los números no son válidos, son menores a 1 o la disponible supera la total
+    const invalido = isNaN(vT) || isNaN(vD) || vD <= 0 || vT < 0 || vD > vT;
+
     getEl("mensaje-error-recurso")?.classList.toggle("is-hidden", !invalido);
     if (getEl("btn-guardar-recurso")) getEl("btn-guardar-recurso").disabled = invalido;
     inpD.classList.toggle("is-danger", invalido);
+
     return !invalido;
 }
 
@@ -223,7 +233,7 @@ async function cargarCatalogoRecursos() {
                     <div class="is-flex is-justify-content-space-between is-align-items-center mb-2 p-2" style="background-color: #1f1f1f; border-radius: 4px;">
                         <div class="is-size-7">
                             <strong class="has-text-white">${arreglarEncoding(r.name)}</strong> 
-                            <span class="tag is-info is-light py-0 px-1 ml-1">${r.type || "General"}</span><br>
+                            <span class="tag is-info is-light py-0 px-1 ml-1">${arreglarEncoding(r.type || "General")}</span><br>
                             <span class="has-text-grey-light">Total: ${r.total_quantity ?? r.quantity ?? 0} | Disp: ${r.available_quantity ?? 0}</span>
                         </div>
                         <div>
@@ -240,20 +250,27 @@ async function cargarCatalogoRecursos() {
 async function guardarRecurso(e) {
     e.preventDefault();
     const id = valEl("recurso-id");
-    let totalVal = id ? (Number(valEl("cantidad-total-recurso")) || 0) : (Number(valEl("cantidad-disponible-recurso")) || 1);
-    let dispVal = id ? (Number(valEl("cantidad-disponible-recurso")) || 0) : totalVal;
-
-    if (!validarStockRecurso()) return alert("⚠️ La cantidad disponible no puede ser mayor que la total ni ser un valor negativo.");
+    
+    // Obtiene el valor del campo cantidad
+    const cantidadInput = Number(valEl("cantidad-disponible-recurso")) || 1;
+    const totalVal = id ? (Number(valEl("cantidad-total-recurso")) || cantidadInput) : cantidadInput;
 
     try {
         const data = await apiFetch(id ? `/resources/${id}` : "/resources", id ? "PUT" : "POST", {
-            name: valEl("nombre-recurso"), type: valEl("tipo-recurso"), description: valEl("descripcion-recurso"),
-            total_quantity: totalVal, available_quantity: dispVal, quantity: totalVal
+            name: valEl("nombre-recurso"),
+            type: valEl("tipo-recurso"),
+            description: valEl("descripcion-recurso"),
+            total_quantity: totalVal,
+            available_quantity: cantidadInput,
+            quantity: totalVal
         });
+        
         alert(data.mensaje || data.message || "Recurso guardado correctamente.");
-        cancelarEdicionRecurso(); 
+        cancelarEdicionRecurso();
         cargarCatalogoRecursos();
-    } catch (err) { alert(`⚠️ ${err.message}`); }
+    } catch (err) { 
+        alert(`⚠️ ${err.message}`); 
+    }
 }
 
 // Llena el formulario de recursos con los datos existentes para editarlos
@@ -276,13 +293,36 @@ function prepararEdicionRecurso(r) {
 
 // Resetea el formulario de recursos a su estado original
 function cancelarEdicionRecurso() {
-    getEl("form-recurso")?.reset();
-    getEl("recurso-id").value = "";
-    ["campo-cantidad-disponible", "campo-cantidad-total", "mensaje-error-recurso"].forEach(id => getEl(id)?.classList.add("is-hidden"));
-    const btn = getEl("btn-guardar-recurso");
-    if (btn) { btn.disabled = false; btn.innerText = "GUARDAR RECURSO"; }
-    getEl("titulo-form-recurso").innerText = "🛠️ Registrar / Editar Recurso";
+    const form = document.getElementById("form-recurso");
+    if (form) form.reset();
+
+    // 1. Limpiar el ID oculto
+    const recId = getEl("recurso-id");
+    if (recId) recId.value = "";
+
+    // 2. Restaurar título y botones
+    const titulo = getEl("titulo-form-recurso");
+    if (titulo) titulo.textContent = "🛠️ Registrar / Editar Recurso";
+
     getEl("btn-cancelar-recurso")?.classList.add("is-hidden");
+
+    // 3. CONTROL DE VISIBILIDAD DE CANTIDADES (Aquí está la corrección principal)
+    // Asegurar que el campo de cantidad para nuevo recurso SIEMPRE esté visible:
+    getEl("campo-cantidad-disponible")?.classList.remove("is-hidden"); 
+    
+    // El campo de cantidad total solo se usa en edición, por lo que se oculta al reiniciar:
+    getEl("campo-cantidad-total")?.classList.add("is-hidden");
+
+    // 4. Limpiar errores de validación e input
+    getEl("mensaje-error-recurso")?.classList.add("is-hidden");
+    const inputDisp = getEl("cantidad-disponible-recurso");
+    if (inputDisp) {
+        inputDisp.classList.remove("is-danger");
+        inputDisp.value = "1"; // Valor por defecto
+    }
+
+    const btnGuardar = getEl("btn-guardar-recurso");
+    if (btnGuardar) btnGuardar.disabled = false;
 }
 
 // Elimina un recurso del inventario general
@@ -374,16 +414,39 @@ function prepararEdicionEvento(ev) {
 }
 
 // Limpia el formulario de eventos
-function cancelarEdicion() {
-    getEl("form-evento")?.reset();
-    getEl("evento-id").value = "";
-    getEl("campo-estado-evento")?.classList.add("is-hidden");
-    const isoNow = formatearFechaParaInput(new Date());
-    ["start-time", "end-time"].forEach(id => { if (getEl(id)) getEl(id).min = isoNow; });
+function cancelarEdicionRecurso() {
+    const form = document.getElementById("form-recurso");
+    if (form) form.reset();
 
-    getEl("titulo-form-evento").innerText = "🗓️ Agendar Nuevo Evento";
-    getEl("btn-guardar-evento").innerText = "GUARDAR EVENTO";
-    getEl("btn-cancelar-edicion")?.classList.add("is-hidden");
+    // 1. Limpiar el ID oculto
+    const recId = getEl("recurso-id");
+    if (recId) recId.value = "";
+
+    // 2. Restaurar título del formulario
+    const titulo = getEl("titulo-form-recurso");
+    if (titulo) titulo.textContent = "🛠️ Registrar / Editar Recurso";
+
+    // 3. RESTAURAR TEXTO Y ESTADO DEL BOTÓN
+    const btnGuardar = getEl("btn-guardar-recurso");
+    if (btnGuardar) {
+        btnGuardar.textContent = "GUARDAR RECURSO"; // 👈 Esta línea restaura el texto
+        btnGuardar.disabled = false;
+    }
+
+    // 4. Ocultar el botón cancelar y campos innecesarios
+    getEl("btn-cancelar-recurso")?.classList.add("is-hidden");
+    getEl("campo-cantidad-total")?.classList.add("is-hidden");
+
+    // 5. Mantener visible el campo de cantidad disponible
+    getEl("campo-cantidad-disponible")?.classList.remove("is-hidden");
+
+    // 6. Limpiar errores de validación
+    getEl("mensaje-error-recurso")?.classList.add("is-hidden");
+    const inputDisp = getEl("cantidad-disponible-recurso");
+    if (inputDisp) {
+        inputDisp.classList.remove("is-danger");
+        inputDisp.value = "1";
+    }
 }
 
 // Cancela/Elimina un evento de la base de datos
