@@ -79,9 +79,8 @@ async function cargarArtistasGlobales() {
                     const nombre = a.name || a.nombre || "Sin nombre";
                     const genero = a.genre || a.genero || "Sin género";
                     
-                    // 1. EVALUAR EL CAMPO 'national' DE LA BASE DE DATOS
                     let origen = "N/A";
-                    const natVal = a.national !== undefined ? a.national : (a.nationality !== undefined ? a.nationality : a.nacionalidad);
+                    const natVal = a.nationality !== undefined ? a.nationality : (a.national !== undefined ? a.national : a.nacionalidad);
 
                     if (natVal !== undefined && natVal !== null && natVal !== "") {
                         if (natVal === true || natVal === 1 || String(natVal).toLowerCase() === "true" || String(natVal).toLowerCase().includes("nac")) {
@@ -89,12 +88,10 @@ async function cargarArtistasGlobales() {
                         } else if (natVal === false || natVal === 0 || String(natVal).toLowerCase() === "false" || String(natVal).toLowerCase().includes("inter")) {
                             origen = "Internacional";
                         } else {
-                            // En caso de que se haya guardado un texto libre (ej: "Argentina")
                             origen = natVal;
                         }
                     }
 
-                    // 2. EVALUAR LA EDAD / TRAYECTORIA
                     const edadVal = a.age ?? a.edad;
                     const edadTrayectoria = (edadVal !== undefined && edadVal !== null && edadVal !== "") ? edadVal : "N/A";
 
@@ -145,33 +142,52 @@ async function guardarArtista(e) {
     const edad = valEl("edad-artista");
     const nacionalidadInput = valEl("nacionalidad-artista");
 
+    if (!nombre) {
+        return alert("⚠️ El nombre del artista es obligatorio.");
+    }
+
     try {
-        const data = await apiFetch(id ? `/artists/${id}` : "/artists", id ? "PUT" : "POST", {
+        const payload = {
             name: nombre,
-            genre: genero,
-            description: descripcion,
-            age: Number(edad) || null,
-            national: nacionalidadInput // Se envía al controlador
-        });
+            genre: genero || "",
+            description: descripcion || "",
+            age: edad ? Number(edad) : null,
+            nationality: nacionalidadInput || "",
+            national: nacionalidadInput || ""
+        };
+
+        const data = await apiFetch(
+            id ? `/artists/${id}` : "/artists", 
+            id ? "PUT" : "POST", 
+            payload
+        );
+
         alert(data.mensaje || data.message || "Artista guardado correctamente.");
         cancelarEdicionArtista(); 
         cargarArtistasGlobales();
     } catch (err) { alert(`⚠️ ${err.message}`); }
 }
 
-function prepararEdicionArtista(a) {
-    const buscarPropiedad = (obj, terminos) => {
-        const key = Object.keys(obj).find(k => terminos.some(t => k.toLowerCase().includes(t)));
-        return key && obj[key] !== null && obj[key] !== undefined ? obj[key] : "";
-    };
-
-    getEl("artista-id").value = a.id;
-    getEl("nombre-artista").value = arreglarEncoding(a.name || a.nombre || "");
-    getEl("genero-artista").value = arreglarEncoding(a.genre || a.genero || "");
-    getEl("edad-artista").value = buscarPropiedad(a, ["edad", "age", "trayect", "exp", "years"]);
-    getEl("nacionalidad-artista").value = arreglarEncoding(String(buscarPropiedad(a, ["nacio", "nation", "orig", "pais", "country"])));
-    getEl("descripcion-artista").value = arreglarEncoding(a.description || a.descripcion || "");
-    toggleFormState("artista", true, "✏️ Editar Artista", "", "ACTUALIZAR ARTISTA", "");
+function prepararEdicionEvento(ev) {
+    getEl("evento-id").value = ev.id;
+    getEl("nombre").value = arreglarEncoding(ev.name || ev.nombre || "");
+    getEl("descripcion").value = arreglarEncoding(ev.description || ev.descripcion || "");
+    getEl("lugar").value = arreglarEncoding(ev.location || ev.lugar || "");
+    ["start-time", "end-time"].forEach(id => getEl(id)?.removeAttribute("min"));
+    getEl("start-time").value = formatearFechaParaInput(ev.start_time || ev.inicio);
+    getEl("end-time").value = formatearFechaParaInput(ev.end_time || ev.fin);
+    
+    // Muestra el contenedor del selector de estado
+    const campoEstado = getEl("campo-estado-evento");
+    if (campoEstado) campoEstado.classList.remove("is-hidden");
+    
+    // Asigna el valor actual al select
+    const selectEstado = getEl("estado");
+    if (selectEstado) selectEstado.value = ev.status || ev.estado || "planificado";
+    
+    getEl("btn-cancelar-edicion")?.classList.remove("is-hidden");
+    toggleFormState("evento", true, "✏️ Editar Evento", "", "ACTUALIZAR EVENTO", "");
+    getEl("form-evento")?.scrollIntoView({ behavior: 'smooth' });
 }
 
 function cancelarEdicionArtista() {
@@ -335,7 +351,17 @@ async function guardarEvento(e) {
     if (parsearFechaLocal(end) <= parsearFechaLocal(start)) return alert("⚠️ La fecha y hora de fin debe ser posterior a la de inicio.");
     if (!id && parsearFechaLocal(start) < new Date()) return alert("⚠️ No puedes programar un evento en fecha u hora pasada.");
 
-    const nombre = valEl("nombre"), descripcion = valEl("descripcion"), lugar = valEl("lugar"), estado = id ? valEl("estado") : "planificado";
+    const nombre = valEl("nombre"), descripcion = valEl("descripcion"), lugar = valEl("lugar");
+    
+    // Captura el estado directamente del select 'estado' o 'estado-evento'
+    const selectEstado = getEl("estado") || getEl("estado-evento");
+    const estado = id ? (selectEstado ? selectEstado.value : "planificado") : "planificado";
+
+    // ⚠️ ADVERTENCIA SI SE MARCA COMO CANCELADO
+    if (estado === "cancelado") {
+        const confirmar = confirm("⚠️ ADVERTENCIA: Si marcas este evento como 'cancelado', ya no podrás volver a editarlo ni asignarle recursos/artistas.\n\n¿Deseas confirmar la cancelación?");
+        if (!confirmar) return; // Detiene el envío del formulario si presiona Cancelar
+    }
 
     try {
         const data = await apiFetch(id ? `/events/${id}` : "/events", id ? "PUT" : "POST", {
