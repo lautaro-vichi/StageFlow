@@ -281,19 +281,33 @@ async function actualizarEstadosEventos() {
 
     const [eventos] = await pool.query("SELECT * FROM events");
 
+    console.log("AHORA:", new Date());
+
     for (const evento of eventos) {
 
-        if (evento.status === "cancelado")
+        if (evento.status === "cancelado") {
             continue;
+        }
+
+        const inicio = new Date(evento.start_time);
+        const fin = new Date(evento.end_time);
+
+
+        console.log("EVENTO:", evento.id);
+        console.log("INICIO DB:", evento.start_time);
+        console.log("INICIO JS:", inicio);
+        console.log("FIN DB:", evento.end_time);
+        console.log("FIN JS:", fin);
 
         let nuevoEstado;
 
-        if (ahora < evento.start_time)
+        if (ahora < inicio) {
             nuevoEstado = "planificado";
-        else if (ahora <= evento.end_time)
+        } else if (ahora <= fin) {
             nuevoEstado = "en curso";
-        else
+        } else {
             nuevoEstado = "finalizado";
+        }
 
         if (nuevoEstado !== evento.status) {
             await pool.query(

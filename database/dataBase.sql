@@ -25,13 +25,13 @@ CREATE TABLE artists (
 
     name VARCHAR(100) NOT NULL,
 
-    genre VARCHAR(50)
+    genre VARCHAR(50),
     
     description VARCHAR(225),
 
     age INT,
 
-    national BOOLEAN
+    nationality TEXT
 );
 
 CREATE TABLE resources (
