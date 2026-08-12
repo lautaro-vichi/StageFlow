@@ -30,58 +30,114 @@ async function getResourceById(req, res){
 }
 
 async function createResource(req, res) {
-    const { name, description, type, total_quantity, available_quantity } = req.body;
-    try{
-        if(!name || !description || !type || !total_quantity || !available_quantity){
+    const { name, description, type, total_quantity } = req.body;
+
+    try {
+        if (!name || !description || !type || total_quantity == null) {
             return res.status(400).json({
                 mensaje: "Todos los campos son obligatorios"
-            })
-        };
+            });
+        }
 
-        await pool.query ("INSERT INTO resources (name, description, type, total_quantity, available_quantity) VALUES (?, ?, ?, ?,?)", [name, description, type, total_quantity, available_quantity]);
+        if (total_quantity < 0) {
+            return res.status(400).json({
+                mensaje: "La cantidad total no puede ser negativa"
+            });
+        }
+
+        // Al crear un recurso todos están disponibles
+        const available_quantity = total_quantity;
+
+        await pool.query(
+            "INSERT INTO resources (name, description, type, total_quantity, available_quantity) VALUES (?, ?, ?, ?, ?)",
+            [name, description, type, total_quantity, available_quantity]
+        );
 
         res.status(201).json({
-            mensaje: "Recurso aniadido correctamente"
+            mensaje: "Recurso añadido correctamente"
         });
-    }catch(error){
+
+    } catch (error) {
         console.error(error);
         res.status(500).json({
             mensaje: "Error al añadir recurso"
         });
     }
-};
+}
 
-async function updateResource(req, res){
+async function updateResource(req, res) {
     const resourceId = Number(req.params.id);
     const { name, description, type, total_quantity, available_quantity } = req.body;
-    try{
-        if(!name || !description || !type || !total_quantity || !available_quantity){
+
+    try {
+
+        if (!name || !description || !type || total_quantity == null || available_quantity == null) {
             return res.status(400).json({
                 mensaje: "Todos los campos son obligatorios"
-            })
-        };
-        
-        //existe recurso?
-        const [resource] = await pool.query ("SELECT * FROM resources WHERE id = ?", [resourceId]);
-        if(resource.length === 0){
-           return res.status(404).json({
-            mensaje: "El recurso no existe"
-           });
+            });
+        }
+
+        // ¿Existe?
+        const [resource] = await pool.query(
+            "SELECT * FROM resources WHERE id = ?",
+            [resourceId]
+        );
+
+        if (resource.length === 0) {
+            return res.status(404).json({
+                mensaje: "El recurso no existe"
+            });
+        }
+
+        // No negativos
+        if (total_quantity < 0 || available_quantity < 0) {
+            return res.status(400).json({
+                mensaje: "Las cantidades no pueden ser negativas"
+            });
+        }
+
+        // Disponibles <= Total
+        if (available_quantity > total_quantity) {
+            return res.status(400).json({
+                mensaje: "La cantidad disponible no puede ser mayor a la cantidad total"
+            });
+        }
+
+
+        //el usuario no puede modificar si ya esta en uso cierta cantidad
+        const [usos] = await pool.query("SELECT * FROM event_resource WHERE resource_id = ?",[resourceId]);
+        let i;
+        let sum = 0;
+
+        for (i = 0; i < usos.length; i++){
+          sum += usos[i].quantity 
         };
 
-        await pool.query ("UPDATE resources SET name = ?, description = ?, type = ?, total_quantity = ?, available_quantity = ? WHERE id = ?",[name, description, type, total_quantity, available_quantity, resourceId])
+        if(total_quantity < sum){
+            return res.status(400).json({
+            mensaje: `No se puede reducir la cantidad total porque hay ${sum} recursos asignados a eventos.` }) 
+        };
+
+
+        await pool.query(
+            `UPDATE resources
+             SET name = ?, description = ?, type = ?, total_quantity = ?, available_quantity = ?
+             WHERE id = ?`,
+            [name, description, type, total_quantity, available_quantity, resourceId]
+        );
+
         res.status(200).json({
             mensaje: "Recurso actualizado correctamente"
         });
 
-
-    }catch(error){
+    } catch (error) {
         console.error(error);
         res.status(500).json({
             mensaje: "Error al modificar recurso"
-        });  
+        });
     }
 }
+
 
 async function deleteResource(req, res){
     const resourceId = Number(req.params.id);
@@ -93,6 +149,14 @@ async function deleteResource(req, res){
            return res.status(404).json({
             mensaje: "El recurso no existe"
            });
+        };
+
+        //recurso en uso?
+        const [enUso] = await pool.query("SELECT * FROM event_resource WHERE resource_id = ?",[resourceId]);
+        if(enUso.length > 0){
+            return res.status(400).json({
+                mensaje: "No se puede eliminar el recurso si ya esta en uso"
+            });
         };
 
         await pool.query ("DELETE FROM resources WHERE id = ?", [resourceId]);
