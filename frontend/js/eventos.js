@@ -518,10 +518,11 @@ async function agregarArtistaAEvento() {
     if (sel.options[sel.selectedIndex].disabled) return alert("⚠️ Este artista ya se encuentra asignado a otro evento en las mismas fechas.");
 
     try {
-        await apiFetch(`/events/${eventoSeleccionadoId}/artists`, "POST", { artist_id: Number(artistId), start_time: new Date().toISOString(), end_time: new Date().toISOString() });
-        getEl("form-asignar-artista")?.reset();
-        await cargarArtistasDelEvento(); 
-        await cargarArtistasGlobales();
+        await apiFetch(`/events/${eventoSeleccionadoId}/artists`, "POST", {
+            artist_id: Number(artistId),
+        });
+        document.getElementById("form-asignar-artista").reset();
+        cargarArtistasDelEvento();
     } catch (e) { alert(`⚠️ ${e.message}`); }
 }
 
