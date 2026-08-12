@@ -1,27 +1,17 @@
 const pool = require("../db");
 
-
 // controlador para obtener todos los eventos
 async function getEvents(req, res) {
-
     try {
-
         await actualizarEstadosEventos();
-
         const [rows] = await pool.query("SELECT * FROM events");
-
         res.json(rows);
-
     } catch (error) {
-
         console.error(error);
-
         res.status(500).json({
             mensaje: "Error al obtener eventos"
         });
-
     }
-
 }
 
 // obtiene un evento segun su id
@@ -29,34 +19,26 @@ async function getEventById(req, res) {
     const id = Number(req.params.id); // convertimos el id a numero 
 
     try {
-
         await actualizarEstadosEventos();
-
         const [rows] = await pool.query("SELECT * FROM events WHERE id = ?", [id]);
 
-        if (rows.length === 0 ) {
+        if (rows.length === 0) {
             return res.status(404).json({
                 mensaje: "Evento no encontrado"
-            })
-
-            
+            });
         } 
-     res.json(rows[0]);    
-
+        res.json(rows[0]);    
     } catch (error) {
         console.error(error);
         res.status(500).json({
             mensaje: "Error al obtener evento"
-        })
+        });
     }
-
 } 
 
-//controlador para crear evento
+// controlador para crear evento
 async function createEvent(req, res) {
-
     try {
-
         const { name, description, start_time, end_time, location } = req.body;
 
         if (!name || !description || !start_time || !end_time || !location) {
@@ -77,10 +59,10 @@ async function createEvent(req, res) {
         );
 
         for (const event of events) {
+            if (event.status === "cancelado") continue;
 
             const inicioExistente = new Date(event.start_time);
             const finExistente = new Date(event.end_time);
-
             const inicioNuevo = new Date(start_time);
             const finNuevo = new Date(end_time);
 
@@ -104,18 +86,15 @@ async function createEvent(req, res) {
         });
 
     } catch (error) {
-
         console.error(error);
-
         res.status(500).json({
             mensaje: "Error al crear evento"
         });
-
     }
 }
-//controlador para actualizar un evento
-async function updateEvent(req, res) {
 
+// controlador para actualizar un evento
+async function updateEvent(req, res) {
     const id = Number(req.params.id);
 
     const {
@@ -128,7 +107,6 @@ async function updateEvent(req, res) {
     } = req.body;
 
     try {
-
         const [rows] = await pool.query(
             "SELECT * FROM events WHERE id = ?",
             [id]
@@ -140,6 +118,7 @@ async function updateEvent(req, res) {
             });
         }
 
+        // Si el evento ya está finalizado o cancelado, no se permite su modificación
         if (
             rows[0].status === "finalizado" ||
             rows[0].status === "cancelado"
@@ -167,10 +146,10 @@ async function updateEvent(req, res) {
         );
 
         for (const event of events) {
+            if (event.status === "cancelado") continue;
 
             const inicioExistente = new Date(event.start_time);
             const finExistente = new Date(event.end_time);
-
             const inicioNuevo = new Date(start_time);
             const finNuevo = new Date(end_time);
 
@@ -183,17 +162,19 @@ async function updateEvent(req, res) {
 
         let nuevoEstado = rows[0].status;
 
-        // ¿El usuario intentó cambiar el estado?
+        // Permite cambiar a cancelado o mantener estados válidos
         if (status && status !== rows[0].status) {
-
             if (status === "cancelado") {
                 nuevoEstado = "cancelado";
+            } else if (status === "planificado" || status === "confirmado") {
+                nuevoEstado = status;
             } else {
                 return res.status(400).json({
-                    mensaje: "El estado solo puede modificarse a cancelado"
+                    mensaje: "El estado solo puede modificarse a cancelado, planificado o confirmado"
                 });
             }
         }
+
         await pool.query(
             `UPDATE events
              SET name = ?,
@@ -219,23 +200,18 @@ async function updateEvent(req, res) {
         });
 
     } catch (error) {
-
         console.error(error);
-
         res.status(500).json({
             mensaje: "Error al actualizar evento"
         });
-
     }
 }
 
 // controlador para eliminar un evento
 async function deleteEvent(req, res) {
-
     const id = Number(req.params.id);
 
     try {
-
         const [rows] = await pool.query(
             "SELECT * FROM events WHERE id = ?",
             [id]
@@ -266,38 +242,24 @@ async function deleteEvent(req, res) {
         });
 
     } catch (error) {
-
         console.error(error);
-
         res.status(500).json({
             mensaje: "Error al eliminar evento"
         });
-
     }
 }
+
 async function actualizarEstadosEventos() {
-
     const ahora = new Date();
-
     const [eventos] = await pool.query("SELECT * FROM events");
 
-    console.log("AHORA:", new Date());
-
     for (const evento of eventos) {
-
         if (evento.status === "cancelado") {
             continue;
         }
 
         const inicio = new Date(evento.start_time);
         const fin = new Date(evento.end_time);
-
-
-        console.log("EVENTO:", evento.id);
-        console.log("INICIO DB:", evento.start_time);
-        console.log("INICIO JS:", inicio);
-        console.log("FIN DB:", evento.end_time);
-        console.log("FIN JS:", fin);
 
         let nuevoEstado;
 

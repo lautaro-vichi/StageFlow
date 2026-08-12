@@ -6,7 +6,7 @@ async function getArtists(req, res) {
         const [rows] = await pool.query("SELECT * FROM artists");
         res.json(rows);
     } catch (error) {
-        console.log(error);
+        console.error("Error al obtener artistas:", error);
         res.status(500).json({
             mensaje: "Error al obtener artistas"
         });
@@ -32,7 +32,7 @@ async function getArtistById(req, res) {
         res.json(rows[0]);
 
     } catch (error) {
-        console.log(error);
+        console.error("Error al obtener artista:", error);
         res.status(500).json({
             mensaje: "Error al obtener artista"
         });
@@ -42,19 +42,23 @@ async function getArtistById(req, res) {
 // Controller para añadir un artista
 async function createArtist(req, res) {
     try {
-        const { name, genre, description, age, nationality } = req.body;
+        // Acepta cualquiera de las 3 posibles claves que envíe el frontend
+        const { name, genre, description, age, nationality, national, nacionalidad } = req.body;
+        const finalNationality = nationality || national || nacionalidad || "";
 
-        // Validamos que los datos obligatorios existan
-        if (!name || genre === undefined || description === undefined || age === undefined || nationality === undefined) {
+        // Validamos únicamente que el nombre tenga contenido
+        if (!name || name.trim() === "") {
             return res.status(400).json({
-                mensaje: "Todos los campos son obligatorios"
+                mensaje: "El nombre del artista es obligatorio"
             });
         }
+
+        const parsedAge = age !== "" && age !== null && age !== undefined ? Number(age) : null;
 
         const [result] = await pool.query(
             `INSERT INTO artists (name, genre, description, age, nationality)
              VALUES (?, ?, ?, ?, ?)`,
-            [name, genre, description, age, nationality]
+            [name, genre || "", description || "", parsedAge, finalNationality]
         );
 
         res.status(201).json({
@@ -63,7 +67,7 @@ async function createArtist(req, res) {
         });
 
     } catch (error) {
-        console.error(error);
+        console.error("Error al añadir artista:", error);
         res.status(500).json({
             mensaje: "Error al añadir artista"
         });
@@ -87,19 +91,19 @@ async function updateArtist(req, res) {
             });
         }
 
-        if (!name || genre === undefined || description === undefined || age === undefined || nationality === undefined) {
+        if (!name || genre === undefined || description === undefined || nationality === undefined) {
             return res.status(400).json({
-                mensaje: "Todos los campos son obligatorios"
+                mensaje: "Nombre, género, descripción y nacionalidad son obligatorios"
             });
         }
 
+        const parsedAge = age !== "" && age !== null && age !== undefined ? Number(age) : null;
+
         await pool.query(
             `UPDATE artists
-             SET name = ?, genre = ?, description = ?, age = ?, nationality
-              = ?
+             SET name = ?, genre = ?, description = ?, age = ?, nationality = ?
              WHERE id = ?`,
-            [name, genre, description, age, nationality
-                , id]
+            [name, genre, description, parsedAge, nationality, id]
         );
 
         res.json({
@@ -107,7 +111,7 @@ async function updateArtist(req, res) {
         });
 
     } catch (error) {
-        console.log(error);
+        console.error("Error al actualizar artista:", error);
         res.status(500).json({
             mensaje: "Error al actualizar artista"
         });
@@ -140,7 +144,7 @@ async function deleteArtist(req, res) {
         });
 
     } catch (error) {
-        console.log(error);
+        console.error("Error al eliminar artista:", error);
         res.status(500).json({
             mensaje: "Error al eliminar artista"
         });
