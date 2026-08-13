@@ -12,6 +12,16 @@ async function apiFetch(endpoint, method = "GET", body = null) {
     return data;
 }
 
+function componentesART(fechaISO) {
+    const d = new Date(fechaISO); // acá SÍ se respeta la Z / UTC real
+    const fmt = new Intl.DateTimeFormat("en-CA", {
+        timeZone: "America/Argentina/Buenos_Aires",
+        year: "numeric", month: "2-digit", day: "2-digit",
+        hour: "2-digit", minute: "2-digit", hour12: false
+    });
+    return Object.fromEntries(fmt.formatToParts(d).map(p => [p.type, p.value]));
+}
+
 function parsearFechaLocal(str) {
     if (!str) return new Date();
     const [f, h] = String(str).replace(" ", "T").split("T");
@@ -22,8 +32,8 @@ function parsearFechaLocal(str) {
 
 const formatearFechaParaInput = str => {
     if (!str) return "";
-    const d = parsearFechaLocal(str), pad = n => String(n).padStart(2, "0");
-    return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+    const p = componentesART(str);
+    return `${p.year}-${p.month}-${p.day}T${p.hour}:${p.minute}`;
 };
 
 const arreglarEncoding = str => {
@@ -37,15 +47,16 @@ const arreglarEncoding = str => {
 
 function formatearFecha(str) {
     if (!str) return "No especificada";
-    const d = parsearFechaLocal(str), pad = n => String(n).padStart(2, "0"), h = d.getHours();
-    return `${pad(d.getDate())}/${pad(d.getMonth() + 1)}/${d.getFullYear()}, ${h % 12 || 12}:${pad(d.getMinutes())} ${h >= 12 ? "PM" : "AM"}`;
+    const p = componentesART(str);
+    const h = Number(p.hour);
+    return `${p.day}/${p.month}/${p.year}, ${h % 12 || 12}:${p.minute} ${h >= 12 ? "PM" : "AM"}`;
 }
 
 const obtenerColorTagEstado = s => ({ confirmado: "is-success", "en curso": "is-warning", finalizado: "is-dark", cancelado: "is-danger" }[s] || "is-info");
 
 function obtenerEstadoCalculado(ev) {
     if (ev.status === "cancelado") return "cancelado";
-    const ahora = new Date(), inicio = parsearFechaLocal(ev.start_time || ev.inicio), fin = parsearFechaLocal(ev.end_time || ev.fin);
+    const ahora = new Date(), inicio = new Date(ev.start_time || ev.inicio), fin = new Date(ev.end_time || ev.fin);
     return (ahora >= inicio && ahora <= fin) ? "en curso" : (ahora > fin ? "finalizado" : (ev.status || "planificado"));
 }
 
@@ -116,10 +127,10 @@ async function cargarArtistasGlobales() {
             if (eventoSeleccionadoId) {
                 const todos = await apiFetch("/events"), actual = todos.find(e => e.id === eventoSeleccionadoId);
                 if (actual) {
-                    const iniA = parsearFechaLocal(actual.start_time || actual.inicio), finA = parsearFechaLocal(actual.end_time || actual.fin);
+                    const iniA = new Date(actual.start_time || actual.inicio), finA = new Date(actual.end_time || actual.fin);
                     for (const ev of todos) {
                         if (ev.id === eventoSeleccionadoId || ev.status === "cancelado") continue;
-                        if (iniA < parsearFechaLocal(ev.end_time || ev.fin) && finA > parsearFechaLocal(ev.start_time || ev.inicio)) {
+                        if (iniA < new Date(ev.end_time || ev.fin) && finA > new Date(ev.start_time || ev.inicio)) {
                             (await apiFetch(`/events/${ev.id}/artists`).catch(() => [])).forEach(art => ocupados.add(art.id));
                         }
                     }

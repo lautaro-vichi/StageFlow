@@ -22,6 +22,7 @@ services:
       DB_USER: root
       DB_PASSWORD: root
       DB_NAME: stage_flow
+      TZ: America/Argentina/Buenos_Aires
    depends_on:
     - mysql
 
