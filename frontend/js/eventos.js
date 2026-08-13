@@ -1,8 +1,10 @@
 // 🌐 CONFIGURACIÓN, VARIABLES Y HELPERS
-// Si estás accediendo desde otra máquina o túnel, toma el hostname del navegador
-const API_URL = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
-    ? "http://localhost:3000"
-    : `${window.location.protocol}//${window.location.hostname}:3000`;
+const IS_LOCAL = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
+
+// 💡 Cambia la URL entre comillas por la URL real que te dé Render al desplegar el Backend
+const BACKEND_URL_PROD = "https://stageflow-backend.onrender.com"; 
+
+const API_URL = IS_LOCAL ? "http://localhost:3000" : BACKEND_URL_PROD;
 
 let eventoSeleccionadoId = null, eventoSeleccionadoEstado = "";
 
