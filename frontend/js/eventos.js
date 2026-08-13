@@ -1,5 +1,9 @@
 // 🌐 CONFIGURACIÓN, VARIABLES Y HELPERS
-const API_URL = "http://localhost:3000";
+// Si estás accediendo desde otra máquina o túnel, toma el hostname del navegador
+const API_URL = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
+    ? "http://localhost:3000"
+    : `${window.location.protocol}//${window.location.hostname}:3000`;
+
 let eventoSeleccionadoId = null, eventoSeleccionadoEstado = "";
 
 const getEl = id => document.getElementById(id);
@@ -13,7 +17,7 @@ async function apiFetch(endpoint, method = "GET", body = null) {
 }
 
 function componentesART(fechaISO) {
-    const d = new Date(fechaISO); // acá SÍ se respeta la Z / UTC real
+    const d = new Date(fechaISO);
     const fmt = new Intl.DateTimeFormat("en-CA", {
         timeZone: "America/Argentina/Buenos_Aires",
         year: "numeric", month: "2-digit", day: "2-digit",
@@ -144,6 +148,20 @@ async function cargarArtistasGlobales() {
     } catch (e) { console.error("Error al cargar artistas:", e); }
 }
 
+function prepararEdicionArtista(a) {
+    if (getEl("artista-id")) getEl("artista-id").value = a.id;
+    if (getEl("nombre-artista")) getEl("nombre-artista").value = arreglarEncoding(a.name || a.nombre || "");
+    if (getEl("genero-artista")) getEl("genero-artista").value = arreglarEncoding(a.genre || a.genero || "");
+    if (getEl("descripcion-artista")) getEl("descripcion-artista").value = arreglarEncoding(a.description || a.descripcion || "");
+    if (getEl("edad-artista")) getEl("edad-artista").value = a.age ?? a.edad ?? "";
+
+    const natVal = a.nationality !== undefined ? a.nationality : (a.national !== undefined ? a.national : a.nacionalidad);
+    if (getEl("nacionalidad-artista")) getEl("nacionalidad-artista").value = arreglarEncoding(natVal || "");
+
+    toggleFormState("artista", true, "✏️ Editar Artista", "", "ACTUALIZAR ARTISTA", "");
+    getEl("form-artista")?.scrollIntoView({ behavior: "smooth" });
+}
+
 async function guardarArtista(e) {
     e.preventDefault();
     const id = valEl("artista-id");
@@ -177,28 +195,6 @@ async function guardarArtista(e) {
         cancelarEdicionArtista(); 
         cargarArtistasGlobales();
     } catch (err) { alert(`⚠️ ${err.message}`); }
-}
-
-function prepararEdicionEvento(ev) {
-    getEl("evento-id").value = ev.id;
-    getEl("nombre").value = arreglarEncoding(ev.name || ev.nombre || "");
-    getEl("descripcion").value = arreglarEncoding(ev.description || ev.descripcion || "");
-    getEl("lugar").value = arreglarEncoding(ev.location || ev.lugar || "");
-    ["start-time", "end-time"].forEach(id => getEl(id)?.removeAttribute("min"));
-    getEl("start-time").value = formatearFechaParaInput(ev.start_time || ev.inicio);
-    getEl("end-time").value = formatearFechaParaInput(ev.end_time || ev.fin);
-    
-    // Muestra el contenedor del selector de estado
-    const campoEstado = getEl("campo-estado-evento");
-    if (campoEstado) campoEstado.classList.remove("is-hidden");
-    
-    // Asigna el valor actual al select
-    const selectEstado = getEl("estado");
-    if (selectEstado) selectEstado.value = ev.status || ev.estado || "planificado";
-    
-    getEl("btn-cancelar-edicion")?.classList.remove("is-hidden");
-    toggleFormState("evento", true, "✏️ Editar Evento", "", "ACTUALIZAR EVENTO", "");
-    getEl("form-evento")?.scrollIntoView({ behavior: 'smooth' });
 }
 
 function cancelarEdicionArtista() {
@@ -364,14 +360,12 @@ async function guardarEvento(e) {
 
     const nombre = valEl("nombre"), descripcion = valEl("descripcion"), lugar = valEl("lugar");
     
-    // Captura el estado directamente del select 'estado' o 'estado-evento'
     const selectEstado = getEl("estado") || getEl("estado-evento");
     const estado = id ? (selectEstado ? selectEstado.value : "planificado") : "planificado";
 
-    // ⚠️ ADVERTENCIA SI SE MARCA COMO CANCELADO
     if (estado === "cancelado") {
         const confirmar = confirm("⚠️ ADVERTENCIA: Si marcas este evento como 'cancelado', ya no podrás volver a editarlo ni asignarle recursos/artistas.\n\n¿Deseas confirmar la cancelación?");
-        if (!confirmar) return; // Detiene el envío del formulario si presiona Cancelar
+        if (!confirmar) return;
     }
 
     try {
@@ -516,3 +510,22 @@ async function quitarRecursoDeEvento(resourceId) {
         await cargarRecursosDelEvento(); await cargarCatalogoRecursos();
     } catch (e) { alert(`⚠️ ${e.message}`); }
 }
+
+// EXPOSICIÓN GLOBAL A WINDOW PARA LOS EVENTOS ONCLICK EN HTML
+window.prepararEdicionArtista = prepararEdicionArtista;
+window.cancelarEdicionArtista = cancelarEdicionArtista;
+window.eliminarArtista = eliminarArtista;
+
+window.prepararEdicionRecurso = prepararEdicionRecurso;
+window.cancelarEdicionRecurso = cancelarEdicionRecurso;
+window.eliminarRecurso = eliminarRecurso;
+
+window.prepararEdicionEvento = prepararEdicionEvento;
+window.cancelarEdicionEvento = cancelarEdicionEvento;
+window.cancelarEdicion = cancelarEdicion;
+window.eliminarEvento = eliminarEvento;
+
+window.abrirModalDetalles = abrirModalDetalles;
+window.cerrarModal = cerrarModal;
+window.quitarArtistaDeEvento = quitarArtistaDeEvento;
+window.quitarRecursoDeEvento = quitarRecursoDeEvento;
