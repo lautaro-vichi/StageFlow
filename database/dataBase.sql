@@ -59,10 +59,6 @@ CREATE TABLE event_resource (
 
     quantity INT NOT NULL,
 
-    start_time DATETIME,
-
-    end_time DATETIME,
-
     FOREIGN KEY (event_id) REFERENCES events(id) ON DELETE CASCADE,
 
     FOREIGN KEY (resource_id) REFERENCES resources(id) ON DELETE CASCADE
@@ -75,10 +71,6 @@ CREATE TABLE event_artist (
     event_id INT NOT NULL,
 
     artist_id INT NOT NULL,
-
-    start_time DATETIME,
-
-    end_time DATETIME,
 
     FOREIGN KEY (event_id) REFERENCES events(id) ON DELETE CASCADE,
 
