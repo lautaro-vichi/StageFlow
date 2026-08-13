@@ -492,6 +492,7 @@ async function cargarRecursosDelEvento() {
     } catch { cont.innerHTML = '<p class="has-text-danger is-size-7">Error al cargar.</p>'; }
 }
 
+
 async function agregarRecursoAEvento() {
     const resId = valEl("modal-select-recurso"), cant = valEl("modal-cantidad-recurso");
     if (!resId || !cant) return alert("Selecciona un recurso y cantidad.");
