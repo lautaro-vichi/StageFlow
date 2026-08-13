@@ -253,6 +253,7 @@ async function actualizarEstadosEventos() {
     const ahora = new Date();
     const [eventos] = await pool.query("SELECT * FROM events");
 
+
     for (const evento of eventos) {
         if (evento.status === "cancelado") {
             continue;
