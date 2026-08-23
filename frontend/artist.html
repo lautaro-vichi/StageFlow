@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StageFlow-Artists</title>
+     
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.0/css/bulma.min.css">
+    <style>
+        body { background: #1a1a1a; color: #fff; }
+        .box { background: #262626 !important; color: #fff !important; border: 1px solid #363636; }
+        .box .title, .box .label, .box .subtitle { color: #fff !important; }
+        .input, .select select, .textarea { background: #363636 !important; border-color: #4a4a4a !important; color: #fff !important; }
+        .input::placeholder, .textarea::placeholder { color: #888; }
+        
+        /* Contenedores de listas con scroll y separación */
+        .scrollable-list { 
+            max-height: 280px; 
+            overflow-y: auto; 
+            padding-right: 8px; 
+            margin-top: 10px;
+        }
+
+        /* Estilizado opcional para scrollbar personalizada */
+        .scrollable-list::-webkit-scrollbar {
+            width: 6px;
+        }
+        .scrollable-list::-webkit-scrollbar-thumb {
+            background-color: #4a4a4a;
+            border-radius: 4px;
+        }
+        .scrollable-list::-webkit-scrollbar-track {
+            background-color: transparent;
+        }
+    </style>
+</head>
+<body>
+    
+    <!-- BARRA DE NAVEGACIÓN -->
+    <header>
+        <nav class="navbar is-black">
+            <div class="container">
+                <div class="navbar-brand">
+                    <a class="navbar-item has-text-weight-bold is-size-4" href="index.html">⚡ StageFlow</a>
+                    <a role="button" class="navbar-burger" aria-label="menu" data-target="navbarMenuPrincipal">
+                        <span></span><span></span><span></span><span></span>
+                    </a>
+                </div>
+                <div id="navbarMenuPrincipal" class="navbar-menu">
+                    <div class="navbar-start">
+                        <a class="navbar-item" href="index.html">Inicio</a>
+                        <a class="navbar-item is-active" href="eventos.html" aria-current="page">Logística General</a>
+                        <a class="navbar-item" href="artist.html">Artistas/recursos</a>
+                        <a class="navbar-item" href="nosotros.html">Nosotros</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+
+        <!-- TITULOS -->
+    <section class="hero is-dark is-small">
+        <div class="hero-body container">
+            <h1 class="title is-3 has-text-white">Panel de Control de Artistas</h1>
+            <h2 class="subtitle is-6 has-text-grey-light">Administracion de artistas y el catálogo completo de equipamiento técnico.</h2>
+        </div>
+    </section>
+
+        <!-- FORMULARIOS -->
+    <main class="section">
+        <div class="container">
+            <div class="columns is-desktop">
+                
+                <!-- COLUMNA ARTISTAS -->
+                <div class="column is-half-desktop">
+                    
+                    <!-- Formulario de Artistas -->
+                    <div class="box">
+                        <h3 id="titulo-form-artista" class="title is-4 has-text-centered mb-4">✨ Agendar / Editar Artista</h3>
+                        <form id="form-artista">
+                            <input type="hidden" id="artista-id" value="">
+                            <div class="field">
+                                <label class="label">Nombre de la Banda / Artista:</label>
+                                <input class="input" type="text" id="nombre-artista" placeholder="Ej: Duki" required>
+                            </div>
+                            <div class="columns">
+                                <div class="column">
+                                    <div class="field">
+                                        <label class="label">Género Musical:</label>
+                                        <input class="input" type="text" id="genero-artista" placeholder="Ej: Trap / Rock" required>
+                                    </div>
+                                </div>
+                                <div class="column">
+                                    <div class="field">
+                                        <label class="label">Edad / Trayectoria (Años):</label>
+                                        <input class="input" type="number" id="edad-artista" placeholder="Ej: 27" min="1" required>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="field">
+                                <label class="label">Nacionalidad:</label>
+                                <input class="input" type="text" id="nacionalidad-artista" placeholder="Ej: Argentina" required>
+                            </div>
+                            <div class="field">
+                                <label class="label">Descripción / Rider Corto:</label>
+                                <textarea class="textarea" id="descripcion-artista" placeholder="Breve descripción del artista..." rows="2" required></textarea>
+                            </div>
+                            <div class="field">
+                                <button type="submit" id="btn-guardar-artista" class="button is-link is-fullwidth has-text-weight-bold">GUARDAR ARTISTA</button>
+                                <button type="button" id="btn-cancelar-artista" class="button is-light is-fullwidth mt-2 is-hidden" onclick="cancelarEdicionArtista()">Cancelar Edición</button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Lista de Artistas -->
+                    <div class="box p-4">
+                        <h3 class="subtitle is-5 has-text-weight-bold mb-3">🎵 Catálogo de Artistas</h3>
+                        <div id="lista-artistas" class="scrollable-list">
+                            <p class="has-text-grey-light is-italic">Cargando artistas...</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- COLUMNA RECURSOS TÉCNICOS -->
+                <div class="column is-half-desktop">
+                    
+                    <!-- Formulario de Recursos -->
+                    <div class="box">
+                        <h3 id="titulo-form-recurso" class="title is-4 has-text-centered mb-4">🛠️ Registrar / Editar Recurso</h3>
+                        <form id="form-recurso">
+                            <input type="hidden" id="recurso-id" value="">
+
+                            <!-- 1. Nombre -->
+                            <div class="field mb-3">
+                                <label class="label">Nombre del Recurso / Equipo:</label>
+                                <div class="control">
+                                    <input class="input" type="text" id="nombre-recurso" placeholder="Ej: Parlantes JBL EON" required>
+                                </div>
+                            </div>
+
+                            <!-- 2. Tipo -->
+                            <div class="field mb-3">
+                                <label class="label">Tipo de Recurso:</label>
+                                <div class="control">
+                                    <input class="input" type="text" id="tipo-recurso" placeholder="Ej: Audio / Iluminación" required>
+                                </div>
+                            </div>
+
+                            <!-- Campo oculto para edición avanzada -->
+                            <div class="field mb-3 is-hidden" id="campo-cantidad-total">
+                                <label class="label">Cantidad Total:</label>
+                                <div class="control">
+                                    <input class="input" type="number" id="cantidad-total-recurso" min="0">
+                                </div>
+                            </div>
+
+                            <!-- 3. Cantidad -->
+                            <div class="field mb-3" id="campo-cantidad-disponible">
+                                <label class="label">Cantidad disponible:</label>
+                                <div class="control">
+                                    <input class="input" type="number" id="cantidad-disponible-recurso" placeholder="Ej: 10" min="1" required>
+                                </div>
+                                <p id="mensaje-error-recurso" class="help is-danger is-hidden">Ingrese una cantidad válida.</p>
+                            </div>
+
+                            <!-- 4. Descripción -->
+                            <div class="field mb-4">
+                                <label class="label">Descripción / Especificaciones:</label>
+                                <div class="control">
+                                    <textarea class="textarea" id="descripcion-recurso" rows="2" placeholder="Detalles técnicos del equipo..."></textarea>
+                                </div>
+                            </div>
+
+                            <!-- Botones -->
+                            <div class="field">
+                                <button type="submit" id="btn-guardar-recurso" class="button is-success is-fullwidth has-text-weight-bold">GUARDAR RECURSO</button>
+                                <button type="button" id="btn-cancelar-recurso" class="button is-light is-fullwidth mt-2 is-hidden" onclick="cancelarEdicionRecurso()">Cancelar</button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Lista de Recursos -->
+                    <div class="box p-4">
+                        <h3 class="subtitle is-5 has-text-weight-bold mb-3">📦 Inventario de Recursos</h3>
+                        <div id="lista-recursos" class="scrollable-list">
+                            <p class="has-text-grey-light is-italic">Cargando recursos...</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+
+</body>
+</html>
