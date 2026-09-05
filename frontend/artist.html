@@ -15,12 +15,11 @@
         
         /* Contenedores de listas con scroll y separación */
         .scrollable-list { 
-            max-height: 280px; 
-            overflow-y: auto; 
-            padding-right: 8px; 
-            margin-top: 10px;
+        max-height: 520px; /* Aumentamos de 280px a 520px */
+        overflow-y: auto; 
+        padding-right: 8px; 
+        margin-top: 10px;
         }
-
         /* Estilizado opcional para scrollbar personalizada */
         .scrollable-list::-webkit-scrollbar {
             width: 6px;
@@ -66,49 +65,50 @@
             <h2 class="subtitle is-6 has-text-grey-light">Administracion de artistas y el catálogo completo de equipamiento técnico.</h2>
         </div>
     </section>
-
-        <!-- FORMULARIOS -->
+       <!-- FORMULARIOS Y LISTAS -->
     <main class="section">
         <div class="container">
+            
+            <!-- CONTENEDOR FLEXIBLE DE BULMA (2 COLUMNAS) -->
             <div class="columns is-desktop">
                 
-                <!-- COLUMNA ARTISTAS -->
+                <!-- 1. COLUMNA IZQUIERDA: ARTISTAS -->
                 <div class="column is-half-desktop">
                     
                     <!-- Formulario de Artistas -->
                     <div class="box">
-                        <h3 id="titulo-form-artista" class="title is-4 has-text-centered mb-4">✨ Agendar / Editar Artista</h3>
-                        <form id="form-artista">
-                            <input type="hidden" id="artista-id" value="">
+                        <h3 id="artist-form-title" class="title is-4 has-text-centered mb-4">✨ Agendar / Editar Artista</h3>
+                        <form id="artist-form">
+                            <input type="hidden" id="artist-id" value="">
                             <div class="field">
                                 <label class="label">Nombre de la Banda / Artista:</label>
-                                <input class="input" type="text" id="nombre-artista" placeholder="Ej: Duki" required>
+                                <input class="input" type="text" id="artist-name" placeholder="Ej: Duki" required>
                             </div>
                             <div class="columns">
                                 <div class="column">
                                     <div class="field">
                                         <label class="label">Género Musical:</label>
-                                        <input class="input" type="text" id="genero-artista" placeholder="Ej: Trap / Rock" required>
+                                        <input class="input" type="text" id="artist-genre" placeholder="Ej: Trap / Rock" required>
                                     </div>
                                 </div>
                                 <div class="column">
                                     <div class="field">
                                         <label class="label">Edad / Trayectoria (Años):</label>
-                                        <input class="input" type="number" id="edad-artista" placeholder="Ej: 27" min="1" required>
+                                        <input class="input" type="number" id="artist-age" placeholder="Ej: 27" min="1" required>
                                     </div>
                                 </div>
                             </div>
                             <div class="field">
                                 <label class="label">Nacionalidad:</label>
-                                <input class="input" type="text" id="nacionalidad-artista" placeholder="Ej: Argentina" required>
+                                <input class="input" type="text" id="artist-nationality" placeholder="Ej: Argentina" required>
                             </div>
                             <div class="field">
                                 <label class="label">Descripción / Rider Corto:</label>
-                                <textarea class="textarea" id="descripcion-artista" placeholder="Breve descripción del artista..." rows="2" required></textarea>
+                                <textarea class="textarea" id="artist-description" placeholder="Breve descripción del artista..." rows="2" required></textarea>
                             </div>
                             <div class="field">
-                                <button type="submit" id="btn-guardar-artista" class="button is-link is-fullwidth has-text-weight-bold">GUARDAR ARTISTA</button>
-                                <button type="button" id="btn-cancelar-artista" class="button is-light is-fullwidth mt-2 is-hidden" onclick="cancelarEdicionArtista()">Cancelar Edición</button>
+                                <button type="submit" id="artist-save-btn" class="button is-link is-fullwidth has-text-weight-bold">GUARDAR ARTISTA</button>
+                                <button type="button" id="artist-cancel-btn" class="button is-light is-fullwidth mt-2 is-hidden">Cancelar Edición</button>
                             </div>
                         </form>
                     </div>
@@ -116,26 +116,27 @@
                     <!-- Lista de Artistas -->
                     <div class="box p-4">
                         <h3 class="subtitle is-5 has-text-weight-bold mb-3">🎵 Catálogo de Artistas</h3>
-                        <div id="lista-artistas" class="scrollable-list">
+                        <div id="artists-list" class="scrollable-list">
                             <p class="has-text-grey-light is-italic">Cargando artistas...</p>
                         </div>
                     </div>
-                </div>
 
-                <!-- COLUMNA RECURSOS TÉCNICOS -->
+                </div> <!-- Cierre de Columna Artistas -->
+
+                <!-- 2. COLUMNA DERECHA: RECURSOS TÉCNICOS -->
                 <div class="column is-half-desktop">
                     
                     <!-- Formulario de Recursos -->
                     <div class="box">
-                        <h3 id="titulo-form-recurso" class="title is-4 has-text-centered mb-4">🛠️ Registrar / Editar Recurso</h3>
-                        <form id="form-recurso">
-                            <input type="hidden" id="recurso-id" value="">
+                        <h3 id="resource-form-title" class="title is-4 has-text-centered mb-4">🛠️ Registrar / Editar Recurso</h3>
+                        <form id="resource-form">
+                            <input type="hidden" id="resource-id" value="">
 
                             <!-- 1. Nombre -->
                             <div class="field mb-3">
                                 <label class="label">Nombre del Recurso / Equipo:</label>
                                 <div class="control">
-                                    <input class="input" type="text" id="nombre-recurso" placeholder="Ej: Parlantes JBL EON" required>
+                                    <input class="input" type="text" id="resource-name" placeholder="Ej: Parlantes JBL EON" required>
                                 </div>
                             </div>
 
@@ -143,39 +144,39 @@
                             <div class="field mb-3">
                                 <label class="label">Tipo de Recurso:</label>
                                 <div class="control">
-                                    <input class="input" type="text" id="tipo-recurso" placeholder="Ej: Audio / Iluminación" required>
+                                    <input class="input" type="text" id="resource-type" placeholder="Ej: Audio / Iluminación" required>
                                 </div>
                             </div>
 
                             <!-- Campo oculto para edición avanzada -->
-                            <div class="field mb-3 is-hidden" id="campo-cantidad-total">
+                            <div class="field mb-3 is-hidden" id="resource-total-field">
                                 <label class="label">Cantidad Total:</label>
                                 <div class="control">
-                                    <input class="input" type="number" id="cantidad-total-recurso" min="0">
+                                    <input class="input" type="number" id="resource-total" min="0">
                                 </div>
                             </div>
 
                             <!-- 3. Cantidad -->
-                            <div class="field mb-3" id="campo-cantidad-disponible">
+                            <div class="field mb-3" id="resource-available-field">
                                 <label class="label">Cantidad disponible:</label>
                                 <div class="control">
-                                    <input class="input" type="number" id="cantidad-disponible-recurso" placeholder="Ej: 10" min="1" required>
+                                    <input class="input" type="number" id="resource-available" placeholder="Ej: 10" min="1" required>
                                 </div>
-                                <p id="mensaje-error-recurso" class="help is-danger is-hidden">Ingrese una cantidad válida.</p>
+                                <p id="resource-error-msg" class="help is-danger is-hidden">Ingrese una cantidad válida.</p>
                             </div>
 
                             <!-- 4. Descripción -->
                             <div class="field mb-4">
                                 <label class="label">Descripción / Especificaciones:</label>
                                 <div class="control">
-                                    <textarea class="textarea" id="descripcion-recurso" rows="2" placeholder="Detalles técnicos del equipo..."></textarea>
+                                    <textarea class="textarea" id="resource-description" rows="2" placeholder="Detalles técnicos del equipo..."></textarea>
                                 </div>
                             </div>
 
                             <!-- Botones -->
                             <div class="field">
-                                <button type="submit" id="btn-guardar-recurso" class="button is-success is-fullwidth has-text-weight-bold">GUARDAR RECURSO</button>
-                                <button type="button" id="btn-cancelar-recurso" class="button is-light is-fullwidth mt-2 is-hidden" onclick="cancelarEdicionRecurso()">Cancelar</button>
+                                <button type="submit" id="resource-save-btn" class="button is-success is-fullwidth has-text-weight-bold">GUARDAR RECURSO</button>
+                                <button type="button" id="resource-cancel-btn" class="button is-light is-fullwidth mt-2 is-hidden">Cancelar</button>
                             </div>
                         </form>
                     </div>
@@ -183,16 +184,16 @@
                     <!-- Lista de Recursos -->
                     <div class="box p-4">
                         <h3 class="subtitle is-5 has-text-weight-bold mb-3">📦 Inventario de Recursos</h3>
-                        <div id="lista-recursos" class="scrollable-list">
+                        <div id="resources-list" class="scrollable-list">
                             <p class="has-text-grey-light is-italic">Cargando recursos...</p>
                         </div>
                     </div>
-                </div>
 
-            </div>
+                </div> <!-- Cierre de Columna Recursos -->
+
+            </div> <!-- Cierre de div class="columns is-desktop" -->
         </div>
     </main>
-
-
+    <script type="module" src="js/main.js"></script>
 </body>
 </html>

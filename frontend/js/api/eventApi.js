@@ -1,33 +1,62 @@
-import { apiFetch } from "./apiFetch";
+import { apiFetch } from "./apiFetch.js";
 
-async function getEvents(){ 
+// --- EVENTOS (CRUD PRINCIPAL) ---
+
+// Función para pedir la lista completa de eventos (GET)
+export async function getEvents() {
     return await apiFetch("/events");
-};
-
-async function getEventById(id){
-    return await apiFetch(`/evets/${id}`);
-};
-
-async function postEvent(event) {
-    return await apiFetch("/event", "POST", event);
-};
-
-async function putEvent(id, event) {
-    return await apiFetch(`/event/${id}`, "PUT", event);
-};
-
-async function deleteEvent(event) {
-    return await apiFetch("/event", "DELETE", event);
-};
-
-module.export = {
-    getEventById,
-    getEvents,
-    postEvent,
-    putEvent,
-    deleteEvent
-
 }
 
+// Función para guardar un nuevo evento (POST)
+export async function postEvent(eventData) {
+    return await apiFetch("/events", "POST", eventData);
+}
+
+// Función para actualizar un evento existente (PUT)
+export async function putEvent(id, eventData) {
+    return await apiFetch(`/events/${id}`, "PUT", eventData);
+}
+
+// Función para eliminar un evento (DELETE)
+export async function deleteEvent(id) {
+    return await apiFetch(`/events/${id}`, "DELETE");
+}
+
+// --- TABLA INTERMEDIA: EVENTOS <-> ARTISTAS ---
+
+// Obtener artistas asignados a un evento
+export async function getEventArtists(eventId) {
+    return await apiFetch(`/events/${eventId}/artists`);
+}
+
+// Asignar un artista a un evento
+export async function postEventArtist(eventId, artistId) {
+    return await apiFetch(`/events/${eventId}/artists`, "POST", { artist_id: Number(artistId) });
+}
+
+// Eliminar un artista de un evento
+export async function deleteEventArtist(eventId, artistId) {
+    return await apiFetch(`/events/${eventId}/artists/${artistId}`, "DELETE");
+}
+
+// --- TABLA INTERMEDIA: EVENTOS <-> RECURSOS ---
+
+// Obtener recursos asignados a un evento
+export async function getEventResources(eventId) {
+    return await apiFetch(`/events/${eventId}/resources`);
+}
+
+// Asignar un recurso a un evento
+export async function postEventResource(eventId, resourceId, quantity) {
+    return await apiFetch(`/events/${eventId}/resources`, "POST", { 
+        resource_id: Number(resourceId), 
+        quantity: Number(quantity) 
+    });
+}
+
+// Eliminar un recurso de un evento
+export async function deleteEventResource(eventId, resourceId) {
+    return await apiFetch(`/events/${eventId}/resources/${resourceId}`, "DELETE");
+}
 
 
