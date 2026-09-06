@@ -86,14 +86,17 @@ CREATE TABLE event_artist (
 
 );
 
+CREATE TABLE users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    google_id VARCHAR(255) UNIQUE NOT NULL,
+    email VARCHAR(100) UNIQUE NOT NULL,
+    name VARCHAR(100) NOT NULL,
+    picture VARCHAR(255),
+    role ENUM('admin', 'organizador', 'tecnico') DEFAULT 'organizador',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
 
 
-INSERT INTO events (name, description, start_time, end_time, location, status) VALUES
-('Concierto de Rock', 'Un concierto de rock con bandas locales.', '2026-08-15 20:00:00', '2026-08-15 23:00:00', 'Auditorio Municipal', 'planificado'),
-('Festival de Jazz', 'Un festival de jazz con artistas internacionales.', '2026-08-20 18:00:00', '2026-08-20 22:00:00', 'Parque Central', 'confirmado'),
-('Exposición de Arte', 'Una exposición de arte contemporáneo.', '2026-09-05 10:00:00', '2026-09-05 18:00:00', 'Galería de Arte Moderno', 'en curso'),
-('Feria Gastronómica', 'Una feria gastronómica con chefs reconocidos.', '2026-10-20 12:00:00', '2026-10-20 20:00:00', 'Plaza Mayor', 'finalizado'),
-('Conferencia Tecnológica', 'Una conferencia sobre inteligencia artificial y desarrollo de software.', '2026-11-15 09:00:00', '2026-11-15 17:00:00', 'Centro de Convenciones', 'cancelado');
 
 INSERT INTO resources (name, type, total_quantity, available_quantity) VALUES
 ('Parlantes JBL EON', 'Audio', 20, 20),

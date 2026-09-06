@@ -6,6 +6,11 @@
 
 import { getEvents, deleteEvent } from "../../api/eventApi.js";
 import { loadEventForEdit } from "./eventForm.js";
+import { openEventModal } from "../../modals/modal.js";
+
+import { formatDate, getCalculatedStatus } from "../../utils/formatters.js";
+
+
 
 /*
  * renderiza la lista de eventos en el DOM.
@@ -30,22 +35,23 @@ export async function renderEventsTable() {
 
         const cardsHtml = events.map(event => {
             // Formatear fechas para mostrar en pantalla
-            const startDate = event.start_time ? new Date(event.start_time).toLocaleString("es-AR") : "N/A";
-            const endDate = event.end_time ? new Date(event.end_time).toLocaleString("es-AR") : "N/A";
+            const startDate = formatDate(event.start_time);
+            const endDate = formatDate(event.end_time);
+            const estadoCalculado = getCalculatedStatus(event);
 
             // Asignar color de etiqueta de Bulma según el estado
             let statusTagClass = "is-info";
-            if (event.status === "cancelado") statusTagClass = "is-danger";
-            if (event.status === "confirmado") statusTagClass = "is-success";
-            if (event.status === "en curso") statusTagClass = "is-warning";
-            if (event.status === "finalizado") statusTagClass = "is-dark";
+            if (estadoCalculado === "cancelado") statusTagClass = "is-danger";
+            if (estadoCalculado === "confirmado") statusTagClass = "is-success";
+            if (estadoCalculado === "en curso") statusTagClass = "is-warning";
+            if (estadoCalculado === "finalizado") statusTagClass = "is-dark";
 
             return `
                 <div class="column is-half-desktop is-full-tablet">
                     <div class="box p-4" style="background: #262626 !important; border: 1px solid #363636;">
                         <div class="is-flex is-justify-content-space-between is-align-items-center mb-2">
                             <h4 class="title is-5 has-text-white mb-0">${event.name}</h4>
-                            <span class="tag ${statusTagClass} is-capitalized">${event.status || "planificado"}</span>
+                            <span class="tag ${statusTagClass} is-capitalized">${estadoCalculado || "planificado"}</span>
                         </div>
                         
                         <p class="is-size-7 has-text-grey-light mb-1">
@@ -120,8 +126,9 @@ export function setupEventTableEvents() {
         const detailBtn = event.target.closest(".btn-detail-event");
         if (detailBtn) {
             const eventId = detailBtn.dataset.id;
-            console.log("Abrir modal de detalles para el evento ID:", eventId);
-            // aquí llamarás a la función que abre el modal y carga asignaciones
+            openEventModal(eventId);
         }
+
+        
     });
 }

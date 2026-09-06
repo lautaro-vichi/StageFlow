@@ -7,6 +7,8 @@
 import { postEvent, putEvent } from "../../api/eventApi.js";
 import { renderEventsTable } from "./eventTable.js";
 
+import { formatDateForInput } from "../../utils/formatters.js";
+
 let currentEditingId = null;
 
 /*
@@ -23,10 +25,10 @@ export function loadEventForEdit(event) {
     
     // convertir ISO string a formato exigido por input datetime-local (YYYY-MM-THH:mm)
     if (event.start_time) {
-        document.getElementById("start-time").value = new Date(event.start_time).toISOString().slice(0, 16);
+       document.getElementById("start-time").value = formatDateForInput(event.start_time);
     }
     if (event.end_time) {
-        document.getElementById("end-time").value = new Date(event.end_time).toISOString().slice(0, 16);
+        document.getElementById("end-time").value = formatDateForInput(event.end_time);
     }
 
     if (event.status) {

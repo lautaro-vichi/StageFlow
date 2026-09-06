@@ -1,6 +1,6 @@
 # 🎭 StageFlow
 
-StageFlow es una aplicación web para la gestión de eventos, artistas y recursos técnicos. Permite administrar eventos evitando conflictos de horarios entre artistas y recursos.
+StageFlow es una plataforma de gestión y planificación de eventos destinada a productoras y equipos organizadores, que permite centralizar eventos, artistas, recursos técnicos y horarios, evitando conflictos y facilitando la coordinación del equipo.
 
 ---
 
