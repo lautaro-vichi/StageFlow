@@ -91,7 +91,7 @@ CREATE TABLE users (
     google_id VARCHAR(255) UNIQUE NOT NULL,
     email VARCHAR(100) UNIQUE NOT NULL,
     name VARCHAR(100) NOT NULL,
-    picture VARCHAR(255),
+    picture VARCHAR(500),
     role ENUM('admin', 'organizador', 'tecnico') DEFAULT 'organizador',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
