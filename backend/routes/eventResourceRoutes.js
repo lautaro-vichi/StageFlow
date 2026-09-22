@@ -3,13 +3,26 @@ const router = express.Router();
 
 const eventResourceController = require("../controllers/eventResourceController");
 
-// Obtener todos los recursos de un evento
-router.get("/:id/resources", eventResourceController.getResourcesByEvent);
+const { autenticarToken } = require("../middlewares/authMiddleware");
+const { requerirRol } = require("../middlewares/roleMiddleware");
 
-// Asignar un recurso a un evento
-router.post("/:id/resources", eventResourceController.postResourceEvent);
+// Consultar asignaciones de un evento
+router.get("/:id/resources", autenticarToken, eventResourceController.getResourcesByEvent);
 
-// Eliminar un recurso de un evento
-router.delete("/:eventId/resources/:resourceId", eventResourceController.deleteResourceEvent);
+// Asignar o remover recurso de un show: Solo 'admin' u 'organizador'
+router.post(
+    "/:id/resources", 
+    autenticarToken, 
+    requerirRol(["admin", "organizador"]), 
+   eventResourceController.postResourceEvent
+);
+
+router.delete(
+    "/:id/resources/:artistId", 
+    autenticarToken, 
+    requerirRol(["admin", "organizador"]), 
+   eventResourceController.deleteResourceEvent
+);
 
 module.exports = router;
+

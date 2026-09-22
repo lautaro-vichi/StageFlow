@@ -1,12 +1,26 @@
 const express = require("express");
-const router =  express.Router();
-
 const eventArtistController = require("../controllers/eventArtistController");
+const { autenticarToken } = require("../middlewares/authMiddleware");
+const { requerirRol } = require("../middlewares/roleMiddleware");
 
-router.get("/:id/artists", eventArtistController.getArtistByEvent);
+const router = express.Router();
 
-router.post("/:id/artists",eventArtistController.postArtistEvent);
+// Consultar asignaciones de un evento
+router.get("/:id/artists", autenticarToken, eventArtistController.getArtistByEvent);
 
-router.delete("/:eventId/artists/:artistId", eventArtistController.deleteArtistEvent);
+// Asignar o remover artista de un show: Solo 'admin' u 'organizador'
+router.post(
+    "/:id/artists", 
+    autenticarToken, 
+    requerirRol(["admin", "organizador"]), 
+    eventArtistController.postArtistEvent
+);
+
+router.delete(
+    "/:id/artists/:artistId", 
+    autenticarToken, 
+    requerirRol(["admin", "organizador"]), 
+    eventArtistController.deleteArtistEvent
+);
 
 module.exports = router;

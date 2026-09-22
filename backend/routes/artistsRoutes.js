@@ -3,15 +3,18 @@ const router = express.Router();
 
 const artistsController = require("../controllers/artistsController");
 
-router.get("/", artistsController.getArtists);
+const { autenticarToken } = require("../middlewares/authMiddleware");
+const { requerirRol } = require("../middlewares/roleMiddleware");
 
-router.get("/:id", artistsController.getArtistById);
+// Lectura de catálogo
+router.get("/", autenticarToken, artistsController.getArtists);
 
-router.post("/", artistsController.createArtist);
+// Operaciones de gestión: Solo 'admin' u 'organizador'
+router.post("/", autenticarToken, requerirRol(["admin", "organizador"]), artistsController.createArtist);
+router.put("/:id", autenticarToken, requerirRol(["admin", "organizador"]), artistsController.updateArtist);
 
-router.put("/:id", artistsController.updateArtist);
-
-router.delete("/:id", artistsController.deleteArtist);
+// Borrado sensible: Solo 'admin'
+router.delete("/:id", autenticarToken, requerirRol(["admin"]), artistsController.deleteArtist);
 
 module.exports = router;
 

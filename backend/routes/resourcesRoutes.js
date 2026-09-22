@@ -3,14 +3,18 @@ const router = express.Router();
 
 const resourceController = require("../controllers/resourceController");
 
-router.get("/", resourceController.getResources);
+const { autenticarToken } = require("../middlewares/authMiddleware");
+const { requerirRol } = require("../middlewares/roleMiddleware");
 
-router.get("/:id", resourceController.getResourceById);
+// Lectura de catálogo
+router.get("/", autenticarToken, resourceController.getResources);
 
-router.post("/", resourceController.createResource);
+// Operaciones de gestión: Solo 'admin' u 'organizador'
+router.post("/", autenticarToken, requerirRol(["admin", "organizador"]), resourceController.createResource);
+router.put("/:id", autenticarToken, requerirRol(["admin", "organizador"]), resourceController.updateResource);
 
-router.put("/:id", resourceController.updateResource);
+// Borrado sensible: Solo 'admin'
+router.delete("/:id", autenticarToken, requerirRol(["admin"]), resourceController.deleteResource);
 
-router.delete("/:id", resourceController.deleteResource)
+module.exports = router;
 
-module.exports = router;    

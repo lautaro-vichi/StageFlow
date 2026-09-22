@@ -1,6 +1,7 @@
-import { OAuth2Client } from "google-auth-library";
-import jwt from "jsonwebtoken";
-import db from "../db.js";
+//Verifica Google Token + Genera JWT + Registra en DB
+const { OAuth2Client } = require("google-auth-library");
+const jwt = require("jsonwebtoken");
+const db = require("../db");
 
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
@@ -75,3 +76,6 @@ async function googleLogin(req, res) {
 
 }
 
+module.exports = {
+    googleLogin
+};

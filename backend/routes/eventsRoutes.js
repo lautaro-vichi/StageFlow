@@ -3,19 +3,37 @@ const router = express.Router();
 
 const eventsController = require("../controllers/eventsController");
 
-// controllers para eventos
-router.get("/", eventsController.getEvents);
+const { autenticarToken } = require("../middlewares/authMiddleware");
+const { requerirRol } = require("../middlewares/roleMiddleware");
 
-router.get("/:id", eventsController.getEventById);
+// Ver eventos: Accesible para cualquier usuario logueado ('admin', 'organizador', 'tecnico')
+router.get("/", autenticarToken, eventsController.getEvents);
+router.get("/:id", autenticarToken, eventsController.getEventById);
 
-router.post("/", eventsController.createEvent);
+// Crear evento: Solo 'admin' u 'organizador'
+router.post(
+    "/", 
+    autenticarToken, 
+    requerirRol(["admin", "organizador"]), 
+    eventsController.createEvent
+);
 
-router.put("/:id", eventsController.updateEvent);
+// Modificar evento: Solo 'admin' u 'organizador'
+router.put(
+    "/:id", 
+    autenticarToken, 
+    requerirRol(["admin", "organizador"]), 
+    eventsController.updateEvent
+);
 
-router.delete("/:id", eventsController.deleteEvent);
-
+// Eliminar evento: Solo 'admin'
+router.delete(
+    "/:id", 
+    autenticarToken, 
+    requerirRol(["admin"]), 
+    eventsController.deleteEvent
+);
 
 module.exports = router;
-
 
 
